@@ -1,0 +1,5 @@
+# Ignore Jenkins war
+jenkins.war
+
+# Ignore Terraform provider binaries
+terraform/root/.terraform/
