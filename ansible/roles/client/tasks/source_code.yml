@@ -1,0 +1,9 @@
+---
+- name: Copy all client files to web root
+  ansible.builtin.copy:
+    src: client/
+    dest: /var/www/html/
+    mode: '0644'
+    recurse: yes
+
+

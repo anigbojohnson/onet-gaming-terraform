@@ -1,0 +1,56 @@
+---
+- name: Ensure system packages are up to date
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Add NodeSource Node.js repo
+  ansible.builtin.command: curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
+  args:
+    warn: false
+  changed_when: false
+
+- name: Install Node.js and npm
+  ansible.builtin.dnf:
+    name:
+      - nodejs
+      - npm
+    state: present
+
+- name: Check Node.js version
+  ansible.builtin.command: node -v
+  register: node_version
+
+- name: Show Node.js version
+  ansible.builtin.debug:
+    msg: "{{ node_version.stdout }}"
+
+- name: Check npm version
+  ansible.builtin.command: npm -v
+  register: npm_version
+
+- name: Show npm version
+  ansible.builtin.debug:
+    msg: "{{ npm_version.stdout }}"
+
+- name: Create systemd service for Node.js app
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/myapp.service
+    content: |
+      [Unit]
+      Description=My Node.js App
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/bin/node /var/www/server/app.js
+      Restart=always
+      User=node
+      Group=node
+      Environment=PATH=/usr/bin:/usr/local/bin
+      WorkingDirectory=/var/www/server
+
+      [Install]
+      WantedBy=multi-user.target
+  notify:
+    - Restart Node.js App
+

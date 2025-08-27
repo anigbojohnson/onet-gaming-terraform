@@ -1,0 +1,21 @@
+---
+- name: Ensure Nginx is installed
+  yum:
+    name: nginx
+    state: present
+
+- name: Enable and start Nginx service
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Copy Nginx configuration
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart nginx
+

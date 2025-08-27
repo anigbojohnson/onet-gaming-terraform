@@ -1,0 +1,73 @@
+---
+# tasks file for todo_role
+- name: Import MySQL GPG key
+  rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+
+- name: Download MySQL 5.7 repo RPM
+  get_url:
+    url: https://repo.mysql.com/mysql57-community-release-el7-8.noarch.rpm
+    dest: /tmp/mysql57-community-release-el7-8.noarch.rpm
+
+- name: Install MySQL repo RPM (skip GPG check)
+  command: yum localinstall -y --nogpgcheck /tmp/mysql57-community-release-el7-8.noarch.rpm
+  args:
+    creates: /etc/yum.repos.d/mysql-community.repo
+
+- name: Install MySQL server
+  yum:
+    name: mysql-community-server
+    state: present
+
+- name: Start and enable MySQL service
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Install pip for Python 3
+  yum:
+    name: python3-pip
+    state: present
+
+- name: Get MySQL temporary root password
+  command: grep 'temporary password' /var/log/mysqld.log
+  register: temp_pass_result
+  changed_when: false
+
+- name: Extract password from log line
+  set_fact:
+    temp_root_pass: "{{ temp_pass_result.stdout.split(' ')[-1] }}"
+
+- name: Install PyMySQL via pip
+  pip:
+    name: PyMySQL
+    executable: pip3
+
+
+
+ - name: Ensure database exists
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_host: "{{ db_host }}"
+        login_port: "{{ db_port }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        login_db: mysql
+
+    - name: Create tasks table
+      community.mysql.mysql_query:
+        query: |
+          CREATE TABLE IF NOT EXISTS tasks (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            status TINYINT(1) DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+        login_host: "{{ db_host }}"
+        login_port: "{{ db_port }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        login_db: "{{ db_name }}"

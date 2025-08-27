@@ -1,0 +1,8 @@
+---
+- name: Restart Node.js App
+  ansible.builtin.systemd:
+    name: onet-gaming
+    state: restarted
+    enabled: yes
+
+

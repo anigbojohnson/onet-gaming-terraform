@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for server
+db_host: mydb-instance.cluster-xxxxxxxx.us-east-1.rds.amazonaws.com
+db_port: 3306
+db_user: admin
+db_password: SuperSecretPass123!
+db_name: todo_app
+
