@@ -11,37 +11,35 @@ pipeline {
     }
 
     environment {
-        TF_DIR = 'terraform/root'                 // Path to Terraform folder
-        ANSIBLE_DIR = 'ansible'             // Path to Ansible folder
-        AWS_REGION = 'eu-west-2'            // Your AWS region
+        TF_DIR = 'terraform/root'   // Path to Terraform folder
+        ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
+        AWS_REGION = 'eu-west-2'    // Your AWS region
     }
 
     stages {
         stage('Terraform Deploy') {
-                steps {
-                    // Inject AWS credentials into environment
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
-                        dir("${TF_DIR}") {
-                            sh """
-                            # Check if workspace exists; if not, create it
-                            terraform workspace list | grep -w ${params.TF_WORKSPACE} || \
-                            terraform workspace new ${params.TF_WORKSPACE}
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
+                    dir("${TF_DIR}") {
+                        sh """
+                        # Check if workspace exists; if not, create it
+                        terraform workspace list | grep -w ${params.TF_WORKSPACE} || \
+                        terraform workspace new ${params.TF_WORKSPACE}
 
-                            # Select the chosen workspace
-                            terraform workspace select ${params.TF_WORKSPACE}
+                        # Select the chosen workspace
+                        terraform workspace select ${params.TF_WORKSPACE}
 
-                            # Initialize Terraform
-                            terraform init
+                        # Initialize Terraform
+                        terraform init
 
-                            # Apply Terraform (with remote backend)
-                            terraform apply -auto-approve
-                            """
-                            echo "Terraform applied in workspace: ${params.TF_WORKSPACE}"
-                        }
+                        # Apply Terraform (with remote backend)
+                        terraform apply -auto-approve
+                        """
+                        echo "Terraform applied in workspace: ${params.TF_WORKSPACE}"
                     }
                 }
             }
-
+        }
 
         stage('Get EC2 Public IP & Update Ansible Inventory') {
             steps {
@@ -71,14 +69,14 @@ pipeline {
         }
 
         stage('Run Ansible') {
-            sshagent(['onet-gaming-project-ec2']) {  // Use the credential ID from Jenkins
-            dir("${ANSIBLE_DIR}") {
-                sh "ansible-playbook -i inventory/dev.ini playbooks/configure_ec2.yml"
+            steps {
+                sshagent(['onet-gaming-project-ec2']) {  // Use the credential ID from Jenkins
+                    dir("${ANSIBLE_DIR}") {
+                        sh "ansible-playbook -i inventory/dev.ini playbooks/configure_ec2.yml"
+                    }
+                }
             }
-    }
-}
-
-
+        }
     }
 
     post {
