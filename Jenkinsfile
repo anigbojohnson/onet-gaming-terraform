@@ -17,29 +17,25 @@ parameters {
     }
 
     stages {
-        stage('Terraform Deploy') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
-                    dir("${TF_DIR}") {
-                        sh """
-                        # Check if workspace exists; if not, create it
-                        terraform workspace list | grep -w ${params.TF_WORKSPACE} || \
-                        terraform workspace new ${params.TF_WORKSPACE}
+        stage('Terraform Init & Select Workspace') {
+    steps {
+        dir("${TF_DIR}") {
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
+                sh """
+                # Initialize Terraform backend first
+                terraform init -reconfigure
 
-                        # Select the chosen workspace
-                        terraform workspace select ${params.TF_WORKSPACE}
+                # Check if workspace exists; if not, create it
+                terraform workspace list | grep -w ${params.TF_WORKSPACE} || \
+                terraform workspace new ${params.TF_WORKSPACE}
 
-                        # Initialize Terraform
-                        terraform init
-
-                        # Apply Terraform (with remote backend)
-                        terraform apply -auto-approve
-                        """
-                        echo "Terraform applied in workspace: ${params.TF_WORKSPACE}"
-                    }
-                }
+                # Select the chosen workspace
+                terraform workspace select ${params.TF_WORKSPACE}
+                """
             }
         }
+    }
+}
 
         stage('Get EC2 Public IP & Update Ansible Inventory') {
             steps {
