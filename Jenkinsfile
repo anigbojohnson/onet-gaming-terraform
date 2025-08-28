@@ -1,14 +1,14 @@
 pipeline {
     agent any
 
-    // Jenkins parameter for selecting workspace
-    parameters {
-        choice(
+parameters {
+        string(
             name: 'TF_WORKSPACE',
-            choices: ['dev', 'prod'],
-            description: 'Select Terraform workspace'
+            defaultValue: 'dev',
+            description: 'Enter Terraform workspace (dev or prod)'
         )
     }
+
 
     environment {
         TF_DIR = 'terraform/root'   // Path to Terraform folder
