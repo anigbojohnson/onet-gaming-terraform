@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'WORKSPACE_ENV', defaultValue: 'dev', description: 'Terraform workspace')
+        string(name: 'WORKSPACE_NAME', defaultValue: 'dev', description: 'Terraform workspace')
     }
 
 
@@ -22,11 +22,11 @@ pipeline {
                 terraform init -reconfigure
 
                 # Check if workspace exists; if not, create it
-                terraform workspace list | grep -w ${params.WORKSPACE_ENV} || \
-                terraform workspace new ${params.WORKSPACE_ENV}
+                terraform workspace list | grep -w ${params.WORKSPACE_NAME} || \
+                terraform workspace new ${params.WORKSPACE_NAME}
 
                 # Select the chosen workspace
-                terraform workspace select ${params.WORKSPACE_ENV}
+                terraform workspace select ${params.WORKSPACE_NAME}
                 """
             }
         }
