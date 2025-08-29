@@ -69,7 +69,7 @@ pipeline {
         stage('Run Ansible') {
             steps {
                     dir("${ANSIBLE_DIR}") {
-                        sh "ansible-playbook -i inventory/dev.ini playbooks/configure_ec2.yml"
+                        sh "ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml"
                     }
                 
             }
