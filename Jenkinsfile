@@ -27,6 +27,9 @@ pipeline {
 
                 # Select the chosen workspace
                 terraform workspace select ${params.WORKSPACE_NAME}
+
+                # Apply Terraform (with remote backend) 
+                terraform apply -auto-approve
                 """
             }
         }
