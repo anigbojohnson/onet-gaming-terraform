@@ -19,7 +19,6 @@ pipeline {
             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
                 sh """
                 # Initialize Terraform backend first
-                terraform destroy
                 terraform init -reconfigure
 
                 # Check if workspace exists; if not, create it
