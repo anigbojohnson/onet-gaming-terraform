@@ -65,11 +65,10 @@ pipeline {
 
         stage('Run Ansible') {
             steps {
-                sshagent(['onet-gaming-project-ec2']) {  // Use the credential ID from Jenkins
                     dir("${ANSIBLE_DIR}") {
                         sh "ansible-playbook -i inventory/dev.ini playbooks/configure_ec2.yml"
                     }
-                }
+                
             }
         }
     }
