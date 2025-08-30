@@ -1,17 +1,22 @@
 ---
-- name: Ensure Nginx is installed
+- name: Enable Nginx extras repo on Amazon Linux 2
+  command: amazon-linux-extras enable nginx1
+  args:
+    creates: /etc/yum.repos.d/amzn2-extras.repo
+
+- name: Install Nginx
   yum:
     name: nginx
     state: present
 
 - name: Enable and start Nginx service
-  ansible.builtin.service:
+  service:
     name: nginx
     state: started
     enabled: yes
 
 - name: Copy Nginx configuration
-  ansible.builtin.copy:
+  copy:
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
     owner: root
@@ -19,3 +24,8 @@
     mode: '0644'
   notify: Restart nginx
 
+handlers:
+  - name: Restart nginx
+    service:
+      name: nginx
+      state: restarted
