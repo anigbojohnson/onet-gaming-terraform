@@ -45,29 +45,27 @@
     name: PyMySQL
     executable: pip3
 
+- name: Ensure database exists
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_host: "{{ db_host }}"
+    login_port: "{{ db_port }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_db: mysql
 
-
- - name: Ensure database exists
-      community.mysql.mysql_db:
-        name: "{{ db_name }}"
-        state: present
-        login_host: "{{ db_host }}"
-        login_port: "{{ db_port }}"
-        login_user: "{{ db_user }}"
-        login_password: "{{ db_password }}"
-        login_db: mysql
-
-    - name: Create tasks table
-      community.mysql.mysql_query:
-        query: |
-          CREATE TABLE IF NOT EXISTS tasks (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            status TINYINT(1) DEFAULT 0,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          );
-        login_host: "{{ db_host }}"
-        login_port: "{{ db_port }}"
-        login_user: "{{ db_user }}"
-        login_password: "{{ db_password }}"
-        login_db: "{{ db_name }}"
+- name: Create tasks table
+  community.mysql.mysql_query:
+    query: |
+      CREATE TABLE IF NOT EXISTS tasks (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        status TINYINT(1) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    login_host: "{{ db_host }}"
+    login_port: "{{ db_port }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_db: "{{ db_name }}"

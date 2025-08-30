@@ -1,3 +1,11 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # vars file for server
+# vars/main.yml
+
+tf_outputs: "{{ lookup('file', 'ansible/roles/server/vars/db.json') | from_json }}"
+db_host: "{{ tf_outputs.db_endpoint.value }}"
+db_user: "{{ tf_outputs.db_username.value }}"
+db_password: "{{ tf_outputs.db_password.value }}"
+db_name: "{{ tf_outputs.db_name.value }}"
+db_port: 3306  # default MySQL port

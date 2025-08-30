@@ -39,33 +39,44 @@ pipeline {
     }
 }
 
-        stage('Get EC2 Public IP & Update Ansible Inventory') {
+
+        stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
             steps {
                 dir("${TF_DIR}") {
                     script {
                         // Capture EC2 public IP(s) from Terraform output
-                        def ec2_ips = sh(
+                        def ec2Ips = sh(
                             script: "terraform output -json web_public_ips | jq -r '.[]'",
                             returnStdout: true
                         ).trim()
 
-                        echo "EC2 Public IP(s): ${ec2_ips}"
+                        if (!ec2Ips) {
+                            error "No EC2 public IPs found in Terraform output!"
+                        }
 
-                        // Now directly write inventory (no need for env variable)
+                        echo "EC2 Public IP(s): ${ec2Ips}"
+
+                        // Write Ansible inventory
                         dir("${ANSIBLE_DIR}") {
-                            def inventoryContent = "[web_public_ips]\n"
-                            ec2_ips.split("\n").each { ip ->
-                                inventoryContent += "${ip} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/mykey.pem\n"
+                            def inventoryContent = """[web_public_ips]
+        """
+                            ec2Ips.split('\n').each { ip ->
+                                inventoryContent += "${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.HOME}/.ssh/mykey.pem\n"
                             }
 
-                            writeFile file: 'inventory/host.ini', text: inventoryContent
-                            echo "Ansible inventory updated with EC2 IP(s): ${ec2_ips}"
+                            writeFile file: 'inventory/hosts.ini', text: inventoryContent
+                            echo "Ansible inventory updated with EC2 IP(s)."
+
+                            // Export Terraform outputs for Ansible
+                            sh "terraform output -json > ansible/roles/server/vars/db.json"
+                            echo "Terraform outputs exported to ansible/vars/db.json"
                         }
                     }
                 }
             }
         }
 
+        
         stage('Run Ansible') {
             steps {
                     dir("${ANSIBLE_DIR}") {
