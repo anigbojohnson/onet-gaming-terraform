@@ -31,8 +31,7 @@ pipeline {
                 terraform destroy -auto-approve
 
 
-                # Apply Terraform (with remote backend) 
-                terraform apply -auto-approve
+           
                 """
             }
         }
