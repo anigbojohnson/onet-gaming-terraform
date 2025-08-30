@@ -68,8 +68,10 @@ pipeline {
                             echo "Ansible inventory updated with EC2 IP(s)."
 
                             // Export Terraform outputs for Ansible
-                            sh "terraform output -json > roles/server/vars/db.json"
-                            echo "Terraform outputs exported to ansible/vars/db.json"
+                // Make sure vars dir exists and save db.json
+                sh "mkdir -p ${ANSIBLE_DIR}/roles/server/vars"
+                sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
+                echo "Terraform outputs exported to roles/server/vars/db.json"
                         }
                     }
                 }
