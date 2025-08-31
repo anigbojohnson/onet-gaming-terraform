@@ -33,6 +33,7 @@ pipeline {
 
            
                 """
+               // terraform destroy -auto-approve
             }
         }
     }
