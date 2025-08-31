@@ -3,17 +3,24 @@
   command: amazon-linux-extras enable nginx1
   args:
     creates: /etc/yum.repos.d/amzn2-extras.repo
+  become: yes
+
+- name: Clean yum metadata after enabling extras
+  command: yum clean metadata
+  become: yes
 
 - name: Install Nginx
   yum:
     name: nginx
     state: present
+  become: yes
 
 - name: Enable and start Nginx service
   service:
     name: nginx
     state: started
     enabled: yes
+  become: yes
 
 - name: Copy Nginx configuration
   copy:
@@ -23,3 +30,4 @@
     group: root
     mode: '0644'
   notify: Restart nginx
+  become: yes
