@@ -1,8 +1,8 @@
 ---
 - name: Enable Nginx extras repo on Amazon Linux 2
   command: amazon-linux-extras enable nginx1
-  args:
-    creates: /etc/yum.repos.d/amzn2-extras.repo
+  register: nginx_repo
+  changed_when: "'enabled' in nginx_repo.stdout"
 
 - name: Install Nginx
   yum:

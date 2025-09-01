@@ -53,8 +53,7 @@ pipeline {
 
                         // Write Ansible inventory
                         dir("${ANSIBLE_DIR}") {
-                            def inventoryContent = """[web]
-        """
+                            def inventoryContent = """[web]"""
                             ec2Ips.split('\n').each { ip ->
                                 inventoryContent += "${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key\n"
                             }
