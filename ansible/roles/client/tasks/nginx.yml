@@ -4,10 +4,15 @@
   register: nginx_repo
   changed_when: "'enabled' in nginx_repo.stdout"
 
+- name: Refresh yum metadata after enabling nginx1
+  command: yum clean metadata
+  when: "'enabled' in nginx_repo.stdout"
+
 - name: Install Nginx
   yum:
     name: nginx
     state: present
+    update_cache: yes   # makes sure new repo is picked up
 
 - name: Enable and start Nginx service
   service:
