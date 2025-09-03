@@ -74,7 +74,15 @@ pipeline {
             }
         }
 
-
+        stage('Run Ansible') {
+    steps {
+        dir("${ANSIBLE_DIR}") {
+            sh '''
+                export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
+                ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
+            '''
+        }
+    }
 }
 
     }
