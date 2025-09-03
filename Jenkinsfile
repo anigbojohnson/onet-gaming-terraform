@@ -77,15 +77,22 @@ pipeline {
         }
 
         stage('Run Ansible') {
-            steps {
-                dir("${ANSIBLE_DIR}") {
+    steps {
+        dir("${ANSIBLE_DIR}") {
+            script {
+                // Use the inventory path dynamically
+                def inventoryPath = "${ANSIBLE_DIR}/inventory/hosts.ini"
+
+                withEnv(["ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log"]) {
                     sh """
-                        export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
-                        ansible-playbook -i ${INVENTORY_PATH} playbooks/configure_client.yml
+                        ansible-playbook -i ${inventoryPath} playbooks/configure_client.yml
                     """
                 }
             }
         }
+    }
+}
+
     }
 
     post {
