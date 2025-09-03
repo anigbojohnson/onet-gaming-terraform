@@ -63,11 +63,13 @@ pipeline {
                             writeFile file: 'inventory/hosts.ini', text: inventoryContent
                             echo "Ansible inventory updated with EC2 IP(s)."
 
-                            // Export Terraform outputs for Ansible
                 // Make sure vars dir exists and save db.json
                   sh "mkdir -p ${ANSIBLE_DIR}/roles/server/vars"
                   sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
                   echo "Terraform outputs exported to roles/server/vars/db.json"
+
+                    // Print hosts.ini content in Jenkins console
+                    sh "cat inventory/hosts.ini"
                         }
                     }
                 }
