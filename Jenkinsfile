@@ -11,6 +11,7 @@ pipeline {
         ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
         AWS_REGION = 'eu-west-2'    // Your AWS region
     }
+    
 
     stages {
         stage('Terraform Init & Select Workspace') {
