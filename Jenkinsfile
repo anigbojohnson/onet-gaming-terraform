@@ -76,7 +76,6 @@ pipeline {
                         // Print and run in shell
                         sh """
                             export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
-                            echo "Inventory path in terminal: ${inventoryPath}"
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
                     }
