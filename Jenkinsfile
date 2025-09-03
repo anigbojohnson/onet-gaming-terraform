@@ -55,9 +55,9 @@ pipeline {
 
                         // Write Ansible inventory
                         dir("${ANSIBLE_DIR}") {
-                            def inventoryContent = """[web]"""
+                            def inventoryContent = "[web]\n"
                             ec2Ips.split('\n').each { ip ->
-                                inventoryContent += "${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key\n"
+                                inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
                             }
 
                             writeFile file: 'inventory/hosts.ini', text: inventoryContent
@@ -82,6 +82,7 @@ pipeline {
                 ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
             '''
         }
+
     }
 }
 
