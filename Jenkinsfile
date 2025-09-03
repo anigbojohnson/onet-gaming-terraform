@@ -74,15 +74,9 @@ pipeline {
             }
         }
 
-        
-        stage('Run Ansible') {
-            steps {
-                    dir("${ANSIBLE_DIR}") {
-                        sh "ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml"
-                    }
-                
-            }
-        }
+
+}
+
     }
 
     post {
