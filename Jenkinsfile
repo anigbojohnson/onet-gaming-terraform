@@ -51,12 +51,12 @@ pipeline {
                             ec2Ips.split('\n').each { ip ->
                                 inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
                             }
+                            echo "Generated inventory content:\n${inventoryContent}"
 
                             writeFile file: 'inventory/hosts.ini', text: inventoryContent
                             echo "Ansible inventory updated with EC2 IP(s)."
 
                             // Make sure vars dir exists and save db.json
-                            sh "mkdir -p ${ANSIBLE_DIR}/roles/server/vars"
                             sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
                             echo "Terraform outputs exported to roles/server/vars/db.json"
 
