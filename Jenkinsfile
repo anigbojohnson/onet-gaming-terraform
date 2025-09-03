@@ -1,17 +1,13 @@
 pipeline {
     agent any
-
     parameters {
         string(name: 'WORKSPACE_NAME', defaultValue: 'dev', description: 'Terraform workspace')
     }
-
     environment {
-        TF_DIR = 'terraform/root'       // Path to Terraform folder
-        ANSIBLE_DIR = 'ansible'         // Path to Ansible folder
-        AWS_REGION = 'eu-west-2'        // Your AWS region
-        INVENTORY_PATH = ''              // Will be set dynamically
+        TF_DIR = 'terraform/root'   // Path to Terraform folder
+        ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
+        AWS_REGION = 'eu-west-2'    // Your AWS region
     }
-
     stages {
         stage('Terraform Init & Select Workspace') {
             steps {
@@ -36,7 +32,7 @@ pipeline {
 
         stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
             steps {
-                dir("${TF_DIR}") {
+                dir("${ANSIBLE_DIR}") {
                     script {
                         // Capture EC2 public IP(s) from Terraform output
                         def ec2Ips = sh(
@@ -51,7 +47,7 @@ pipeline {
                         echo "EC2 Public IP(s): ${ec2Ips}"
 
                         // Write Ansible inventory
-                        dir("${ANSIBLE_DIR}") {
+                        
                             def inventoryContent = "[web]\n"
                             ec2Ips.split('\n').each { ip ->
                                 inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
@@ -60,9 +56,6 @@ pipeline {
                             writeFile file: 'inventory/hosts.ini', text: inventoryContent
                             echo "Ansible inventory updated with EC2 IP(s)."
 
-                            // Update environment variable for inventory path
-                            env.INVENTORY_PATH = "${ANSIBLE_DIR}/inventory/hosts.ini"
-
                             // Make sure vars dir exists and save db.json
                             sh "mkdir -p ${ANSIBLE_DIR}/roles/server/vars"
                             sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
@@ -70,29 +63,30 @@ pipeline {
 
                             // Print hosts.ini content in Jenkins console
                             sh "cat inventory/hosts.ini"
-                        }
+                        
                     }
                 }
             }
         }
 
         stage('Run Ansible') {
-    steps {
-        dir("${ANSIBLE_DIR}") {
-            script {
-                // Use the inventory path dynamically
-                def inventoryPath = "${ANSIBLE_DIR}/inventory/hosts.ini"
-
-                withEnv(["ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log"]) {
-                    sh """
-                        ansible-playbook -i ${inventoryPath} playbooks/configure_client.yml
-                    """
+            steps {
+                dir("${ANSIBLE_DIR}") {
+                    script {
+                        // Print inventory path in terminal
+                        def inventoryPath = "${ANSIBLE_DIR}/inventory/hosts.ini"
+                        sh 'echo "Inventory path in terminal: $INVENTORY_PATH"'
+                        
+                        // Run Ansible
+                        sh """
+                            export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
+                            export INVENTORY_PATH=${inventoryPath}
+                            ansible-playbook -i $INVENTORY_PATH playbooks/configure_client.yml
+                        """
+                    }
                 }
             }
         }
-    }
-}
-
     }
 
     post {
