@@ -54,7 +54,7 @@ pipeline {
                 // Write Ansible inventory
                 def inventoryContent = "[web]\n"
                 ec2Ips.split('\n').each { ip ->
-                    inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
+                    inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
                 }
 
                 echo "Generated inventory content:\n${inventoryContent}"
@@ -80,7 +80,7 @@ pipeline {
                     script {
                         // Print and run in shell
                         sh """
-                            export ANSIBLE_LOG_PATH=ansible.log
+                            export ANSIBLE_LOG_PATH=$ANSIBLE_DIR/ansible.log
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
                     }
