@@ -80,6 +80,7 @@ pipeline {
                     script {
                         // Print and run in shell
                         sh """
+                            chmod 600 ${env.WORKSPACE}/terraform/modules/key/todo-app-key
                             export ANSIBLE_LOG_PATH=$ANSIBLE_DIR/ansible.log
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
