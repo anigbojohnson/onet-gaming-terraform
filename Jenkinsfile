@@ -5,37 +5,34 @@ pipeline {
         string(name: 'WORKSPACE_NAME', defaultValue: 'dev', description: 'Terraform workspace')
     }
 
-
     environment {
-        TF_DIR = 'terraform/root'   // Path to Terraform folder
-        ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
-        AWS_REGION = 'eu-west-2'    // Your AWS region
+        TF_DIR = 'terraform/root'       // Path to Terraform folder
+        ANSIBLE_DIR = 'ansible'         // Path to Ansible folder
+        AWS_REGION = 'eu-west-2'        // Your AWS region
+        INVENTORY_PATH = ''              // Will be set dynamically
     }
-
 
     stages {
         stage('Terraform Init & Select Workspace') {
-    steps {
-        dir("${TF_DIR}") {
-            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
-                sh """
-                # Initialize Terraform backend first
-                terraform init -reconfigure
+            steps {
+                dir("${TF_DIR}") {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
+                        sh """
+                        # Initialize Terraform backend first
+                        terraform init -reconfigure
 
-                # Check if workspace exists; if not, create it
-                terraform workspace list | grep -w ${params.WORKSPACE_NAME} || \
-                terraform workspace new ${params.WORKSPACE_NAME}
+                        # Check if workspace exists; if not, create it
+                        terraform workspace list | grep -w ${params.WORKSPACE_NAME} || \
+                        terraform workspace new ${params.WORKSPACE_NAME}
 
-                # Select the chosen workspace
-                terraform workspace select ${params.WORKSPACE_NAME}
-                terraform apply -auto-approve
-                
-                """
+                        # Select the chosen workspace
+                        terraform workspace select ${params.WORKSPACE_NAME}
+                        terraform apply -auto-approve
+                        """
+                    }
+                }
             }
         }
-    }
-}
-
 
         stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
             steps {
@@ -63,13 +60,16 @@ pipeline {
                             writeFile file: 'inventory/hosts.ini', text: inventoryContent
                             echo "Ansible inventory updated with EC2 IP(s)."
 
-                // Make sure vars dir exists and save db.json
-                  sh "mkdir -p ${ANSIBLE_DIR}/roles/server/vars"
-                  sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
-                  echo "Terraform outputs exported to roles/server/vars/db.json"
+                            // Update environment variable for inventory path
+                            env.INVENTORY_PATH = "${ANSIBLE_DIR}/inventory/hosts.ini"
 
-                    // Print hosts.ini content in Jenkins console
-                    sh "cat inventory/hosts.ini"
+                            // Make sure vars dir exists and save db.json
+                            sh "mkdir -p ${ANSIBLE_DIR}/roles/server/vars"
+                            sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
+                            echo "Terraform outputs exported to roles/server/vars/db.json"
+
+                            // Print hosts.ini content in Jenkins console
+                            sh "cat inventory/hosts.ini"
                         }
                     }
                 }
@@ -77,17 +77,15 @@ pipeline {
         }
 
         stage('Run Ansible') {
-    steps {
-        dir("${ANSIBLE_DIR}") {
-            sh '''
-                export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
-                ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
-            '''
+            steps {
+                dir("${ANSIBLE_DIR}") {
+                    sh """
+                        export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
+                        ansible-playbook -i ${INVENTORY_PATH} playbooks/configure_client.yml
+                    """
+                }
+            }
         }
-
-    }
-}
-
     }
 
     post {
