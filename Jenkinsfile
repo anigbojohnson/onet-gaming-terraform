@@ -11,7 +11,7 @@ pipeline {
         ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
         AWS_REGION = 'eu-west-2'    // Your AWS region
     }
-    
+
 
     stages {
         stage('Terraform Init & Select Workspace') {
@@ -28,7 +28,7 @@ pipeline {
 
                 # Select the chosen workspace
                 terraform workspace select ${params.WORKSPACE_NAME}
-                terraform destroy -auto-approve
+                terraform apply -auto-approve
                 
                 """
             }
