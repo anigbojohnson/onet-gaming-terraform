@@ -73,14 +73,11 @@ pipeline {
             steps {
                 dir("${ANSIBLE_DIR}") {
                     script {
-                        // Define path in Groovy
-                        def inventoryPath = "${ANSIBLE_DIR}/inventory/hosts.ini"
-
                         // Print and run in shell
                         sh """
                             export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
                             echo "Inventory path in terminal: ${inventoryPath}"
-                            ansible-playbook -i ${inventoryPath} playbooks/configure_client.yml
+                            ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
                     }
                 }
