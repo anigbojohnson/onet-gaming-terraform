@@ -31,45 +31,43 @@ pipeline {
         }
 
         stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
-            steps {
-                dir("${TF_DIR}") {
-                    script {
-                        // Capture EC2 public IP(s) from Terraform output
-                        def ec2Ips = sh(
-                            script: "terraform output -json web_public_ips | jq -r '.[]'",
-                            returnStdout: true
-                        ).trim()
+    steps {
+        script {
+            dir("${TF_DIR}") {
+                // Capture EC2 public IP(s) from Terraform output
+                def ec2Ips = sh(
+                    script: "terraform output -json web_public_ips | jq -r '.[]'",
+                    returnStdout: true
+                ).trim()
 
-                        if (!ec2Ips) {
-                            error "No EC2 public IPs found in Terraform output!"
-                        }
+                if (!ec2Ips) {
+                    error "No EC2 public IPs found in Terraform output!"
+                }
 
-                        echo "EC2 Public IP(s): ${ec2Ips}"
+                echo "EC2 Public IP(s): ${ec2Ips}"
 
+                dir("${ANSIBLE_DIR}") {
+                    // Write Ansible inventory
+                    def inventoryContent = "[web]\n"
+                    ec2Ips.split('\n').each { ip ->
+                        inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
                     }
 
-                    dir("${ANSIBLE_DIR}") {
+                    echo "Generated inventory content:\n${inventoryContent}"
 
-                        // Write Ansible inventory
-                            def inventoryContent = "[web]\n"
-                            ec2Ips.split('\n').each { ip ->
-                                inventoryContent += "${ip} ansible_user=ec2-user ansible_ssh_private_key_file=${env.HOME}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n"
-                            }
-                            echo "Generated inventory content:\n${inventoryContent}"
+                    writeFile file: 'inventory/hosts.ini', text: inventoryContent
+                    echo "Ansible inventory updated with EC2 IP(s)."
 
-                            writeFile file: 'inventory/hosts.ini', text: inventoryContent
-                            echo "Ansible inventory updated with EC2 IP(s)."
+                    // Make sure vars dir exists and save db.json
+                    sh "terraform output -json > roles/server/vars/db.json"
 
-                            // Make sure vars dir exists and save db.json
-                            sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
-
-                            // Print hosts.ini content in Jenkins console
-                            sh "cat inventory/hosts.ini"
-                    }    
-                    
+                    // Print hosts.ini content in Jenkins console
+                    sh "cat inventory/hosts.ini"
                 }
             }
         }
+    }
+}
 
 
         stage('Run Ansible') {
