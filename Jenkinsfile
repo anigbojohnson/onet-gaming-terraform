@@ -68,24 +68,25 @@ pipeline {
             }
         }
 
+
         stage('Run Ansible') {
             steps {
                 dir("${ANSIBLE_DIR}") {
                     script {
-                        // Print inventory path in terminal
+                        // Define path in Groovy
                         def inventoryPath = "${ANSIBLE_DIR}/inventory/hosts.ini"
-                        sh 'echo "Inventory path in terminal: $INVENTORY_PATH"'
-                        
-                        // Run Ansible
+
+                        // Print and run in shell
                         sh """
                             export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
-                            export INVENTORY_PATH=${inventoryPath}
-                            ansible-playbook -i $INVENTORY_PATH playbooks/configure_client.yml
+                            echo "Inventory path in terminal: ${inventoryPath}"
+                            ansible-playbook -i ${inventoryPath} playbooks/configure_client.yml
                         """
                     }
                 }
             }
         }
+
     }
 
     post {
