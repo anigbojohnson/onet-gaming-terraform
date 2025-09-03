@@ -80,7 +80,7 @@ pipeline {
                     script {
                         // Print and run in shell
                         sh """
-                            export ANSIBLE_LOG_PATH=$ANSIBLE_DIR/ansible.log
+                            export ANSIBLE_LOG_PATH=ansible.log
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
                     }
