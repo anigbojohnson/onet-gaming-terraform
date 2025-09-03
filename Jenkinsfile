@@ -46,6 +46,10 @@ pipeline {
 
                         echo "EC2 Public IP(s): ${ec2Ips}"
 
+                    }
+
+                    dir("${ANSIBLE_DIR}") {
+
                         // Write Ansible inventory
                             def inventoryContent = "[web]\n"
                             ec2Ips.split('\n').each { ip ->
@@ -58,12 +62,11 @@ pipeline {
 
                             // Make sure vars dir exists and save db.json
                             sh "terraform output -json > ${ANSIBLE_DIR}/roles/server/vars/db.json"
-                            echo "Terraform outputs exported to roles/server/vars/db.json"
 
                             // Print hosts.ini content in Jenkins console
                             sh "cat inventory/hosts.ini"
-                        
-                    }
+                    }    
+                    
                 }
             }
         }
@@ -75,7 +78,7 @@ pipeline {
                     script {
                         // Print and run in shell
                         sh """
-                            export ANSIBLE_LOG_PATH=$WORKSPACE/ansible.log
+                            export ANSIBLE_LOG_PATH=$ANSIBLE_DIR/ansible.log
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
                     }
