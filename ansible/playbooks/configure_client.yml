@@ -2,6 +2,9 @@
   hosts: web
   gather_facts: no
   become: yes
-  roles:
-    - client
+  tasks:
+    - name: Refresh yum metadata
+      yum:
+        update_cache: yes
+
 
