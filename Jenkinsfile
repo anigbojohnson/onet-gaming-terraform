@@ -72,10 +72,7 @@ pipeline {
         }
     }
 }
-
-
-
-        stage('Run Ansible') {
+stage('Run Ansible') {
             steps {
                 dir("${ANSIBLE_DIR}") {
 
