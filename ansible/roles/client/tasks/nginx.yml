@@ -28,9 +28,3 @@
     group: root
     mode: '0644'
   notify: Restart nginx
-
-handlers:
-  - name: Restart nginx
-    service:
-      name: nginx
-      state: restarted
