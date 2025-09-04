@@ -1,10 +1,4 @@
 ---
-- name: Enable Nginx extras repo on Amazon Linux 2
-  command: amazon-linux-extras enable nginx1
-  register: nginx_repo
-  changed_when: "'enabled' in nginx_repo.stdout or 'already enabled' in nginx_repo.stdout"
-  failed_when: nginx_repo.rc != 0 and "'already enabled' not in nginx_repo.stdout"
-
 - name: Refresh yum metadata
   yum:
     update_cache: yes
