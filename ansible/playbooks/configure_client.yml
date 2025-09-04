@@ -2,9 +2,8 @@
   hosts: web
   gather_facts: no
   become: yes
-  tasks:
-      - name: Refresh yum metadata
-        ansible.builtin.dnf:
-           update_cache: yes
+  roles:
+    - client
+
 
 
