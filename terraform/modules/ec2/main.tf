@@ -6,6 +6,7 @@ resource "aws_instance" "this" {
   key_name                    = var.key_name
   iam_instance_profile        = var.iam_instance_profile
 
+
   tags = {
     Name = "${var.project_name}-ec2"
   }
