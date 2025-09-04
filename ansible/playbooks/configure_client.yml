@@ -3,8 +3,8 @@
   gather_facts: no
   become: yes
   tasks:
-    - name: Refresh yum metadata
-      yum:
-        update_cache: yes
+      - name: Refresh yum metadata
+        ansible.builtin.dnf:
+           update_cache: yes
 
 
