@@ -23,10 +23,9 @@ pipeline {
 
                         # Select the chosen workspace
                         terraform workspace select ${params.WORKSPACE_NAME}
-                        terraform destroy -auto-approve
                         terraform apply -auto-approve
                         """
-                        
+
                     }
                 }
             }
