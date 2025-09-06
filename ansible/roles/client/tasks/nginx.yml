@@ -1,8 +1,9 @@
 ---
 
 - name: Refresh yum metadata
-  yum:
-    update_cache: yes
+  ansible.builtin.command: yum makecache
+  become: yes
+  changed_when: true
 
 - name: Install Nginx
   yum:
