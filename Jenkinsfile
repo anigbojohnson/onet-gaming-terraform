@@ -23,7 +23,7 @@ pipeline {
 
                         # Select the chosen workspace
                         terraform workspace select ${params.WORKSPACE_NAME}
-                        terraform apply -auto-approve
+                        terraform destroy -auto-approve
                         """
                         
                     }
@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
+stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
     steps {
         script {
             // Declare ec2Ips at script level so both dirs can use it
@@ -77,6 +77,7 @@ stage('Run Ansible') {
             steps {
                 dir("${ANSIBLE_DIR}") {
 
+
                     script {
                         sh """
                             chmod 600 ${env.WORKSPACE}/terraform/modules/key/todo-app-key
@@ -92,7 +93,7 @@ stage('Run Ansible') {
             }
         }
 
-    }
+}
 
     post {
         always {
