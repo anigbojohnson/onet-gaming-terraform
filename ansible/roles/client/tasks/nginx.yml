@@ -6,9 +6,10 @@
   changed_when: true
 
 - name: Install Nginx
-  yum:
+  ansible.builtin.yum:
     name: nginx
     state: present
+  become: yes
 
 - name: Enable and start Nginx service
   service:
