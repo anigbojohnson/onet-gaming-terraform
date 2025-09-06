@@ -1,7 +1,5 @@
 ---
-- name: Force package manager to yum
-      ansible.builtin.set_fact:
-        ansible_pkg_mgr: yum
+
 - name: Refresh yum metadata
   ansible.builtin.command: yum makecache
   become: yes
