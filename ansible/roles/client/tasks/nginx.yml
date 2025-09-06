@@ -5,8 +5,9 @@
     sudo yum install -y python3.8
     
 - name: Refresh yum metadata
-  yum:
+  ansible.builtin.yum:
     update_cache: yes
+
 
 - name: Install Nginx
   yum:
