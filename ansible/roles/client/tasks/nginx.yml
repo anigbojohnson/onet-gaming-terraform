@@ -4,11 +4,6 @@
     sudo amazon-linux-extras enable python3.8 && \
     sudo yum install -y python3.8
 
-- name: Refresh yum metadata
-  ansible.builtin.dnf:
-    update_cache: yes
-    use_backend: dnf4
-
 
 - name: Install Nginx
   yum:
