@@ -1,9 +1,8 @@
 ---
 
 - name: Refresh yum metadata
-  ansible.builtin.dnf:
+  yum:
     update_cache: yes
-    use_backend: dnf4
 
 - name: Install Nginx
   yum:
