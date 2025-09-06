@@ -1,5 +1,4 @@
 ---
-
 - name: Refresh yum metadata
   ansible.builtin.command: yum makecache
   become: yes
