@@ -8,12 +8,10 @@
   ansible.builtin.yum:
     update_cache: yes
 
-
 - name: Install Nginx
   yum:
     name: nginx
     state: present
-
 
 - name: Enable and start Nginx service
   service:
