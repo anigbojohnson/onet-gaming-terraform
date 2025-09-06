@@ -83,9 +83,7 @@ stage('Run Ansible') {
                             chmod 600 ${env.WORKSPACE}/terraform/modules/key/todo-app-key
                             export ANSIBLE_LOG_PATH=${env.WORKSPACE}/${ANSIBLE_DIR}/ansible.log
                             echo "Ansible log path: \$ANSIBLE_LOG_PATH"
-                            ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml -v
-
-                                                                                                                                                                                                                                                                               ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
+                            ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml -v                                                                                                                                                                                                                                                                               ansible-playbook -i inventory/hosts.ini playbooks/configure_client.yml
                         """
                         }
 
