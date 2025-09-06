@@ -1,6 +1,5 @@
 - name: Configure EC2 instance
   hosts: web
-  gather_facts: no
   become: yes
   roles:
     - client
