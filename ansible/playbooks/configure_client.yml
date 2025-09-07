@@ -1,6 +1,9 @@
 - name: Configure EC2 instance
   hosts: web
   become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.8
+    ansible_pkg_mgr: yum   # safe here, not in inventory
   roles:
     - client
 
