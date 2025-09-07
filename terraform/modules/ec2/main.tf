@@ -11,13 +11,13 @@ resource "aws_instance" "this" {
     # Update all packages
     yum update -y
 
-    # Install Python 3.12 (latest stable version)
-    amazon-linux-extras enable python3.12
-    yum install -y python3.12
+    # Install Python 3.9 (stable on Amazon Linux 2)
+    amazon-linux-extras enable python3.9
+    yum install -y python3.9
 
-    # Set Python 3.12 as default
-    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
-    alternatives --set python3 /usr/bin/python3.12
+    # Set Python 3.9 as default
+    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+    alternatives --set python3 /usr/bin/python3.9
   EOF
 
   tags = {
