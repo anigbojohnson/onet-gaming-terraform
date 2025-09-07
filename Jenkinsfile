@@ -57,20 +57,20 @@ stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
             }
 
             dir("${ANSIBLE_DIR}") {
-                // Write Ansible inventory
+
                 def inventoryContent = "[web]\n"
 
                 ec2Ips.split('\n').each { ip ->
-                        inventoryContent += "${ip} ansible_user=ec2-user " +
-                                            "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
-                                            "ansible_python_interpreter=/usr/bin/python3.8 " +
-                                            "ansible_pkg_mgr=yum\n"
-                                            }
-
+                         inventoryContent += "${ip} ansible_user=ec2-user " +
+                        "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
+                        "ansible_python_interpreter=/usr/bin/python3.8\n"
+                      }
 
                 echo "Generated inventory content:\n${inventoryContent}"
 
                 writeFile file: 'inventory/hosts.ini', text: inventoryContent
+
+
                 echo "Ansible inventory updated with EC2 IP(s)."
 
                 // Make sure vars dir exists and save db.json
