@@ -3,11 +3,13 @@ pipeline {
     parameters {
         string(name: 'WORKSPACE_NAME', defaultValue: 'dev', description: 'Terraform workspace')
     }
+    
     environment {
         TF_DIR = 'terraform/root'   // Path to Terraform folder
         ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
         AWS_REGION = 'eu-west-2'    // Your AWS region
     }
+    
     stages {
 
         stage('Terraform Init & Select Workspace') {
@@ -27,6 +29,7 @@ pipeline {
 
 
                         terraform destroy -auto-approve
+                        terraform apply -auto-approve
 
                         """
                         
