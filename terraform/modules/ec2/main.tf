@@ -13,7 +13,7 @@ resource "aws_instance" "this" {
 
     # Install Python 3.9 (stable on Amazon Linux 2)
     amazon-linux-extras enable python3.9
-    yum install -y python3.9
+    yum install -y python3.9 python3.9-pip
 
     # Set Python 3.9 as default
     alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
