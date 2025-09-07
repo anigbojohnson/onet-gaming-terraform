@@ -26,7 +26,7 @@ pipeline {
                         terraform workspace select ${params.WORKSPACE_NAME}
 
 
-                        terraform apply -auto-approve
+                        terraform destroy -auto-approve
 
                         """
                         
