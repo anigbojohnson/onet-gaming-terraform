@@ -1,4 +1,10 @@
 ---
+- name: Install Python 3
+  raw: |
+    amazon-linux-extras enable python3.9
+    yum install -y python3.9
+    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+    alternatives --set python3 /usr/bin/python3.9
 
 - name: Refresh yum metadata
   ansible.builtin.command: yum makecache
