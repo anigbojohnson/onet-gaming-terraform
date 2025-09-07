@@ -6,18 +6,21 @@ resource "aws_instance" "this" {
   key_name                    = var.key_name
   iam_instance_profile        = var.iam_instance_profile
 
-   user_data = <<-EOF
-              #!/bin/bash
-              # Update packages
-              yum update -y
 
-              # Install Python 3.8
-              amazon-linux-extras enable python3.8
-              yum install -y python3.8
+  user_data = <<-EOF
+            #!/bin/bash
+            # Update packages
+            yum update -y
 
-              # Optional: set python3.8 as default
-              alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
-              EOF
+            # Install Python 3.9
+            amazon-linux-extras enable python3.9
+            yum install -y python3.9
+
+            # Set python3.9 as default
+            alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+            alternatives --config python3 <<< "1"
+            EOF
+
 
 
   tags = {
