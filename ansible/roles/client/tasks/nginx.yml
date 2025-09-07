@@ -13,12 +13,14 @@
   debug:
     msg: "{{ python_version_output.stdout }}"
 
-    
+
 - name: Install Nginx
   ansible.builtin.yum:
     name: nginx
     state: present
   become: yes
+  vars:
+    ansible_pkg_mgr: yum
 
 - name: Enable and start Nginx service
   service:
