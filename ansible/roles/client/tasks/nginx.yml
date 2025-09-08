@@ -1,15 +1,17 @@
 ---
-- name: Install Python 3
-  raw: |
-    amazon-linux-extras enable python3.9
-    yum install -y python3.9
-    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-    alternatives --set python3 /usr/bin/python3.9
+# roles/client/tasks/main.yml
 
-- name: Refresh yum metadata
-  ansible.builtin.command: yum makecache
-  become: yes
-  changed_when: true
+- name: Update apt cache and upgrade packages
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Ensure Python 3 and pip are installed
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+    state: present
 
 - name: Show Python version used by Ansible
   command: "{{ ansible_python_interpreter }} --version"
@@ -19,28 +21,22 @@
   debug:
     msg: "{{ python_version_output.stdout }}"
 
-
 - name: Install Nginx
-  ansible.builtin.yum:
+  ansible.builtin.apt:
     name: nginx
     state: present
-    use_backend: dnf4
-  become: yes
-  vars:
-    ansible_pkg_mgr: yum
 
 - name: Enable and start Nginx service
-  service:
+  ansible.builtin.service:
     name: nginx
     state: started
     enabled: yes
 
 - name: Copy Nginx configuration
-  copy:
+  ansible.builtin.copy:
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
     owner: root
     group: root
     mode: '0644'
   notify: Restart nginx
-

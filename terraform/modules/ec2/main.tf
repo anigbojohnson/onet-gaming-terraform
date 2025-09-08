@@ -1,3 +1,4 @@
+
 resource "aws_instance" "this" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
@@ -11,18 +12,11 @@ resource "aws_instance" "this" {
     set -xe
 
     # Update all packages
-    yum update -y
+    apt-get update -y
+    apt-get upgrade -y
 
-    # Enable Amazon Linux Extras for python3.9
-    amazon-linux-extras enable python3.9
-
-    # Refresh yum cache
-    yum clean metadata
-    yum install -y python39 python39-pip
-
-    # Fix symlink for python3
-    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-    alternatives --set python3 /usr/bin/python3.9
+    # Install Python 3 and pip (should already be present, but just in case)
+    apt-get install -y python3 python3-pip
 
     # Verify installation (logs to /var/log/cloud-init-output.log)
     python3 --version
