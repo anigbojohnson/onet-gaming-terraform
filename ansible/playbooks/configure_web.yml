@@ -2,6 +2,6 @@
   hosts: web
   become: yes
   roles:
-    - client
+    - web
 
   
