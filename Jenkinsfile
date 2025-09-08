@@ -41,9 +41,13 @@ pipeline {
             steps {
                 script {
                     // Fetch EC2 public and private IPs from Terraform
-                    def ec2PublicIps = sh(script: "terraform output -json web_public_ips | jq -r '.[]'", returnStdout: true).trim()
-                    def appPrivateIps = sh(script: "terraform output -json app_private_ips | jq -r '.[]'", returnStdout: true).trim()
+                     def ec2PublicIps = ""
+                     def appPrivateIps = ""
+                dir("${TF_DIR}") {
 
+                    ec2PublicIps = sh(script: "terraform output -json web_public_ips | jq -r '.[]'", returnStdout: true).trim()
+                    appPrivateIps = sh(script: "terraform output -json app_private_ips | jq -r '.[]'", returnStdout: true).trim()
+                }
                     dir("${ANSIBLE_DIR}") {
                         def publicList = ec2PublicIps.split('\n')
                         def privateList = appPrivateIps.split('\n')
