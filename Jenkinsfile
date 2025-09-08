@@ -37,45 +37,71 @@ pipeline {
             }
         }
 
-        stage('Get EC2 Public IPs, Update Ansible Inventory & Access DB credentials') {
+
+        stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
             steps {
                 script {
-                    // Fetch EC2 public and private IPs from Terraform
                      def ec2PublicIps = ""
-                     def appPrivateIps = ""
-                dir("${TF_DIR}") {
+                     def appPrivateIps =  ""
+                    // Fetch Terraform outputs
+                    dir("${TF_DIR}") {
+                        def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
-                    ec2PublicIps = sh(script: "terraform output -json web_public_ips | jq -r '.[]'", returnStdout: true).trim()
-                    appPrivateIps = sh(script: "terraform output -json app_private_ips | jq -r '.[]'", returnStdout: true).trim()
-                }
+                        // Extract public and private IPs
+                        ec2PublicIps = sh(script: "echo '${tfOutputs}' | jq -r '.web_public_ips[]'", returnStdout: true).trim()
+                        appPrivateIps = sh(script: "echo '${tfOutputs}' | jq -r '.app_private_ips[]'", returnStdout: true).trim()
+
+                        echo "Public IPs: ${ec2PublicIps}"
+                        echo "Private IPs: ${appPrivateIps}"
+
+                        // Extract DB credentials from Terraform outputs
+                        env.DB_HOST     = sh(script: "echo '${tfOutputs}' | jq -r '.db_endpoint.value'", returnStdout: true).trim()
+                        env.DB_USER     = sh(script: "echo '${tfOutputs}' | jq -r '.db_username.value'", returnStdout: true).trim()
+                        env.DB_PASSWORD = sh(script: "echo '${tfOutputs}' | jq -r '.db_password.value'", returnStdout: true).trim()
+                        env.DB_NAME     = sh(script: "echo '${tfOutputs}' | jq -r '.db_name.value'", returnStdout: true).trim()
+                        env.APP_LB      = sh(script: "echo '${tfOutputs}' | jq -r '.\"app-lb\".value'", returnStdout: true).trim()
+                    }
+
+                    // Write DB credentials to Ansible vars
+                    dir("${ANSIBLE_DIR}/roles/server/vars") {
+                        def dbVars = """{
+                            "db_host": "${env.DB_HOST}",
+                            "db_user": "${env.DB_USER}",
+                            "db_password": "${env.DB_PASSWORD}",
+                            "db_name": "${env.DB_NAME}",
+                            "app_lb": "${env.APP_LB}"
+                        }"""
+                        writeFile file: 'db.json', text: dbVars
+                        echo "DB credentials saved to db.json"
+                    }
+
+                    // Generate Ansible inventory
                     dir("${ANSIBLE_DIR}") {
-                        def publicList = ec2PublicIps.split('\n')
+                        def publicList  = ec2PublicIps.split('\n')
                         def privateList = appPrivateIps.split('\n')
-                        def bastionIp = publicList[0] // Use first public IP as bastion
+                        def bastionIp   = publicList[0] // Use first public IP as bastion
 
-                        def inventoryContent = "[bastion]\n"
-                        inventoryContent += "${bastionIp} ansible_user=ubuntu " +
-                                            "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
-                                            "ansible_python_interpreter=/usr/bin/python3\n\n"
+                        def inventory = new StringBuilder()
+                        
+                        // Bastion host
+                        inventory.append("[bastion]\n")
+                        inventory.append("${bastionIp} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n\n")
 
-                        inventoryContent += "[web]\n"
+                        // Web servers
+                        inventory.append("[web]\n")
                         publicList.each { ip ->
-                            inventoryContent += "${ip} ansible_user=ubuntu " +
-                                                "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
-                                                "ansible_python_interpreter=/usr/bin/python3\n"
+                            inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n")
                         }
-                        inventoryContent += "\n"
+                        inventory.append("\n")
 
-                        inventoryContent += "[app]\n"
+                        // App servers via bastion
+                        inventory.append("[app]\n")
                         privateList.each { ip ->
-                            inventoryContent += "${ip} ansible_user=ubuntu " +
-                                                "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
-                                                "ansible_python_interpreter=/usr/bin/python3 " +
-                                                "ansible_ssh_common_args='-o ProxyJump=ubuntu@${bastionIp}'\n"
+                            inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3 ansible_ssh_common_args='-o ProxyJump=ubuntu@${bastionIp}'\n")
                         }
 
-                        writeFile file: 'inventory/hosts.ini', text: inventoryContent
-                        echo "Generated inventory with [bastion], [web], and [app] groups."
+                        writeFile file: 'inventory/hosts.ini', text: inventory.toString()
+                        echo "Generated Ansible inventory with [bastion], [web], and [app] groups."
                         sh "cat inventory/hosts.ini"
                     }
                 }
