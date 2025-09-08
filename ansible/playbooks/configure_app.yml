@@ -1,0 +1,7 @@
+---
+- name: Deploy application to private app servers
+  hosts: app
+  become: yes
+  gather_facts: yes
+  roles:
+    - app

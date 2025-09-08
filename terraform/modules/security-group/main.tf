@@ -1,6 +1,6 @@
 resource "aws_security_group" "web_sg" {
-  name        = "alb security group"
-  description = "enable http/https access on port 80/443"
+  name        = "client security group"
+  description = "enable http/https and ssh access on port 80/443 and 22"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -18,14 +18,16 @@ resource "aws_security_group" "web_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-    ingress {
-    description = "https access"
+  
+  ingress {
+    description = "ssh access"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
+    description = "all access"
     from_port   = 0
     to_port     = 0
     protocol    = -1
@@ -67,7 +69,7 @@ resource "aws_security_group" "app_sg" {
 # create security group for the Database
 resource "aws_security_group" "db_sg" {
   name        = "db_sg"
-  description = "enable mysql access on port 3305 from client-sg"
+  description = "enable mysql access on port 3305 from app-sg"
   vpc_id      = var.vpc_id
 
   ingress {
