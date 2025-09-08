@@ -15,10 +15,11 @@
     state: started
     enabled: yes
 
-- name: Install PyMySQL via pip
-  pip:
-    name: PyMySQL
-    executable: pip3
+- name: Install PyMySQL system package
+  apt:
+    name: python3-pymysql
+    state: present
+
 
 - name: Ensure database exists
   community.mysql.mysql_db:
