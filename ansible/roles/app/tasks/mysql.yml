@@ -1,41 +1,46 @@
-- name: Download MySQL GPG key
-  get_url:
+---
+# tasks file for todo_role (Ubuntu, modern key handling)
+
+- name: Ensure prerequisites are installed
+  apt:
+    name: 
+      - gnupg
+      - python3-pip
+    state: present
+    update_cache: yes
+
+- name: Download MySQL APT GPG key
+  ansible.builtin.get_url:
     url: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
     dest: /usr/share/keyrings/mysql.gpg
     mode: '0644'
+  register: mysql_gpg_key
 
-- name: Add MySQL APT repository (using jammy repo instead of noble)
-  apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu jammy mysql-apt-config"
+- name: Add MySQL APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu {{ ansible_distribution_release | lower }} mysql-apt-config"
     state: present
     filename: mysql
+  when: mysql_gpg_key is succeeded
 
 - name: Update apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
+    cache_valid_time: 3600
 
 - name: Install MySQL server
-  apt:
+  ansible.builtin.apt:
     name: mysql-server
     state: present
 
-
-
-
-
 - name: Start and enable MySQL service
-  systemd:
+  ansible.builtin.systemd:
     name: mysql
     state: started
     enabled: yes
 
-- name: Install pip for Python 3
-  apt:
-    name: python3-pip
-    state: present
-
 - name: Install PyMySQL via pip
-  pip:
+  ansible.builtin.pip:
     name: PyMySQL
     executable: pip3
 
