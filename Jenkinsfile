@@ -96,6 +96,8 @@ pipeline {
 
                             # Run playbook for web servers
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_web.yml -v
+                            ansible-playbook -i inventory/hosts.ini playbooks/configure_app.yml -v
+
 
                           
                         """
