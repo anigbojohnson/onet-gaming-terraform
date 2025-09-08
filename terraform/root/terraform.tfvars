@@ -16,7 +16,7 @@ db_username = "admin"
 db_password = "Charis123$"
 
 
-ami_id = "ami-03b485fe5585f0936"
+ami_id = "ami-046c2381f11878233"
 instance_type = "t2.micro"  
 
 db_name = "onet_gaming_app"

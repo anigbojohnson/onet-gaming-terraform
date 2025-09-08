@@ -30,7 +30,7 @@ pipeline {
 
                         terraform destroy -auto-approve
                         terraform apply -auto-approve
-                        
+
                         """
                         
                     }
@@ -64,7 +64,7 @@ stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
                 def inventoryContent = "[web]\n"
 
                 ec2Ips.split('\n').each { ip ->
-    inventoryContent += "${ip} ansible_user=ec2-user " +
+    inventoryContent += "${ip} ansible_user=ubuntu " +
                         "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
                         "ansible_python_interpreter=/usr/bin/python3\n"
 }
