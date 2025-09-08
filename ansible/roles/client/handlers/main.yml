@@ -1,2 +1,5 @@
 ---
-- import_tasks: nginx.yml
+- name: Restart Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
