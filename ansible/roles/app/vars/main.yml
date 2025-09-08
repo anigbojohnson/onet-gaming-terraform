@@ -3,7 +3,7 @@
 # vars file for server
 # vars/main.yml
 
-tf_outputs: "{{ lookup('file', 'ansible/roles/server/vars/db.json') | from_json }}"
+tf_outputs: "{{ lookup('file', 'ansible/roles/app/vars/db.json') | from_json }}"
 db_host: "{{ tf_outputs.db_endpoint.value }}"
 db_user: "{{ tf_outputs.db_username.value }}"
 db_password: "{{ tf_outputs.db_password.value }}"

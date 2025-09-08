@@ -63,7 +63,7 @@ pipeline {
                     }
 
                     // Write DB credentials to Ansible vars
-                    dir("${ANSIBLE_DIR}/roles/server/vars") {
+                    dir("${ANSIBLE_DIR}/roles/app/vars") {
                         def dbVars = """{
                             "db_host": "${env.DB_HOST}",
                             "db_user": "${env.DB_USER}",
@@ -146,3 +146,4 @@ pipeline {
         }
     }
 }
+
