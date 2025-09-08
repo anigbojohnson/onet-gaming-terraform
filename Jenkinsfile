@@ -67,7 +67,7 @@ stage('Get EC2 Public IP, Update Ansible Inventory & Access DB credentials') {
     inventoryContent += "${ip} ansible_user=ubuntu " +
                         "ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key " +
                         "ansible_python_interpreter=/usr/bin/python3\n"
-}
+                        }
 
 
                 echo "Generated inventory content:\n${inventoryContent}"
