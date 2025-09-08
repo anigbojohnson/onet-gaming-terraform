@@ -8,16 +8,24 @@ resource "aws_instance" "this" {
 
   user_data = <<-EOF
     #!/bin/bash
+    set -xe
+
     # Update all packages
     yum update -y
 
-    # Install Python 3.9 (stable on Amazon Linux 2)
+    # Enable Amazon Linux Extras for python3.9
     amazon-linux-extras enable python3.9
-    yum install -y python3.9 python3.9-pip
 
-    # Set Python 3.9 as default
+    # Refresh yum cache
+    yum clean metadata
+    yum install -y python39 python39-pip
+
+    # Fix symlink for python3
     alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
     alternatives --set python3 /usr/bin/python3.9
+
+    # Verify installation (logs to /var/log/cloud-init-output.log)
+    python3 --version
   EOF
 
   tags = {

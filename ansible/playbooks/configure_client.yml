@@ -1,11 +1,7 @@
 - name: Configure EC2 instance
   hosts: web
   become: yes
-  vars:
-    ansible_pkg_mgr: yum   # safe here, not in inventory
-
   roles:
     - client
 
-
-
+  
