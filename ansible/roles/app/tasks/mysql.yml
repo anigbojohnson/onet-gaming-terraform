@@ -1,15 +1,12 @@
----
-# tasks file for todo_role (Ubuntu, with modern key handling)
-
-- name: Download MySQL APT GPG key
+- name: Download MySQL GPG key
   get_url:
     url: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
     dest: /usr/share/keyrings/mysql.gpg
     mode: '0644'
 
-- name: Add MySQL APT repository
+- name: Add MySQL APT repository (using jammy repo instead of noble)
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu {{ ansible_distribution_release }} mysql-apt-config"
+    repo: "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu jammy mysql-apt-config"
     state: present
     filename: mysql
 
@@ -21,6 +18,9 @@
   apt:
     name: mysql-server
     state: present
+
+
+
 
 
 - name: Start and enable MySQL service
