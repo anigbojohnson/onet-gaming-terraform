@@ -82,6 +82,11 @@ pipeline {
                         def privateList = appPrivateIps.split('\n')
                         def bastionIp   = publicList[0] // Use first public IP as bastion
 
+                        // Print values
+                        println "Public IPs: ${publicList}"
+                        println "Private IPs: ${privateList}"
+                        println "Bastion IP: ${bastionIp}"
+
                         def inventory = new StringBuilder()
                         
                         // Bastion host
