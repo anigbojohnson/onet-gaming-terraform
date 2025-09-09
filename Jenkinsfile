@@ -49,6 +49,8 @@ pipeline {
                     dir("${TF_DIR}") {
                         def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
+                        println "output ${tfOutputs}"
+
                             appPrivateIps = tfOutputs["app_private_ips"].value
                             ec2PublicIps  = tfOutputs["web_public_ips"].value
                             dbVars = """{
