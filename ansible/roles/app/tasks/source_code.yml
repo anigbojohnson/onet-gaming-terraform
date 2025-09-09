@@ -1,7 +1,5 @@
 - name: Copy Node.js application to server
-  ansible.builtin.copy:
-    src: server/
+  ansible.builtin.synchronize:
+    src: "{{ playbook_dir }}/../server/"
     dest: /var/www/server/
-    owner: root
-    group: root
-    mode: '0755'
+    recursive: yes
