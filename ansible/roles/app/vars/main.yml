@@ -9,3 +9,9 @@ db_user: "{{ tf_outputs.db_username.value }}"
 db_password: "{{ tf_outputs.db_password.value }}"
 db_name: "{{ tf_outputs.db_name.value }}"
 db_port: 3306  # default MySQL port
+
+
+
+
+
+
