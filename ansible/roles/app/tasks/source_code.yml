@@ -2,6 +2,5 @@
   ansible.builtin.synchronize::
     src: server/
     dest: /var/www/server/
-    owner: root
-    group: root
-    mode: '0755'
+    recursive: yes
+
