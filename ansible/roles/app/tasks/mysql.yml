@@ -26,10 +26,9 @@
     name: "{{ db_name }}"
     state: present
     login_host: "{{ db_host }}"
-    login_port: "{{ db_port }}"
     login_user: "{{ db_user }}"
     login_password: "{{ db_password }}"
-    login_db: mysql
+
 
 - name: Create tasks table
   community.mysql.mysql_query:
