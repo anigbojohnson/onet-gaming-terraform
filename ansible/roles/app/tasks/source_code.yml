@@ -2,6 +2,4 @@
   ansible.builtin.copy:
     src: server/
     dest: /var/www/server/
-    owner: node
-    group: node
     mode: '0755'
