@@ -49,11 +49,13 @@ pipeline {
                     dir("${TF_DIR}") {
                         def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
-                        println "output ${tfOutputs}"
                         def json = new groovy.json.JsonSlurper().parseText(tfOutputs)
 
                             appPrivateIps = json["app_private_ips"].value
                             ec2PublicIps  = json["web_public_ips"].value
+
+                        println "ec2 Public Ips ${ec2PublicIps}"
+
                             dbVars = """{
                                             "db_host": "${json["db_endpoint"].value}",
                                             "db_user": "${json["db_username"].value}",
