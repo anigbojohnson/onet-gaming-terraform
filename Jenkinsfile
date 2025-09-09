@@ -39,11 +39,11 @@ pipeline {
         }
 
 
+             import groovy.json.JsonSlurper
 
 stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
     steps {
         script {
-             import groovy.json.JsonSlurper
             def ec2PublicIps = []
             def appPrivateIps = []
             def dbVars = ""
