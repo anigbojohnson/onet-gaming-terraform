@@ -27,7 +27,7 @@ pipeline {
                         terraform workspace select ${params.WORKSPACE_NAME}
 
                         # Destroy resources (optional)
-                        terraform destroy -auto-approve
+                       # terraform destroy -auto-approve
 
                         # Create resources
                          terraform apply -auto-approve
@@ -44,46 +44,39 @@ pipeline {
                 script {
                      def ec2PublicIps = ""
                      def appPrivateIps =  ""
+                     def dbVars = ""
                     // Fetch Terraform outputs
                     dir("${TF_DIR}") {
                         def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
-                        println "output ${tfOutputs}"
-                    }
+                            appPrivateIps = json["app_private_ips"].value
+                            ec2PublicIps  = json["web_public_ips"].value
+                            dbVars = """{
+                                            "db_host": "${json["db_endpoint"].value}",
+                                            "db_user": "${json["db_username"].value}",
+                                            "db_password": "${json["db_password"].value}",
+                                            "db_name": "${json["db_name"].value}"
+                                            }"""
+                                        }
 
                     // Write DB credentials to Ansible vars
                     dir("${ANSIBLE_DIR}/roles/app/vars") {
-                        def dbVars = """{
-                            "db_host": "${env.DB_HOST}",
-                            "db_user": "${env.DB_USER}",
-                            "db_password": "${env.DB_PASSWORD}",
-                            "db_name": "${env.DB_NAME}",
-                            "app_lb": "${env.APP_LB}"
-                        }"""
                         writeFile file: 'db.json', text: dbVars
                         echo "DB credentials saved to db.json"
                     }
 
                     // Generate Ansible inventory
                     dir("${ANSIBLE_DIR}") {
-                        def publicList  = ec2PublicIps.split('\n')
-                        def privateList = appPrivateIps.split('\n')
-                        def bastionIp   = publicList[0] // Use first public IP as bastion
-
-                        // Print values
-                        println "Public IPs: ${publicList}"
-                        println "Private IPs: ${privateList}"
-                        println "Bastion IP: ${bastionIp}"
 
                         def inventory = new StringBuilder()
                         
                         // Bastion host
                         inventory.append("[bastion]\n")
-                        inventory.append("${bastionIp} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n\n")
+                        inventory.append("${ec2PublicIps[0]} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n\n")
 
                         // Web servers
                         inventory.append("[web]\n")
-                        publicList.each { ip ->
+                        ec2PublicIps.each { ip ->
                             inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n")
                         }
                         inventory.append("\n")
