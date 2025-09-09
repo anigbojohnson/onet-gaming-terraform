@@ -6,7 +6,7 @@
 # vars file for server
 # vars/main.yml
 
-tf_outputs: "{{ lookup('file', playbook_dir + '/roles/app/vars/db.json') | from_json }}"
+tf_outputs: "{{ lookup('file', role_path + '/vars/db.json') | from_json }}"
 db_host: "{{ tf_outputs.db_host }}"
 db_user: "{{ tf_outputs.db_user }}"
 db_password: "{{ tf_outputs.db_password }}"
