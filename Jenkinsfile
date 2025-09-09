@@ -48,19 +48,7 @@ pipeline {
                     dir("${TF_DIR}") {
                         def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
-                        // Extract public and private IPs
-                        ec2PublicIps = sh(script: "echo '${tfOutputs}' | jq -r '.web_public_ips[]'", returnStdout: true).trim()
-                        appPrivateIps = sh(script: "echo '${tfOutputs}' | jq -r '.app_private_ips[]'", returnStdout: true).trim()
-
-                        echo "Public IPs: ${ec2PublicIps}"
-                        echo "Private IPs: ${appPrivateIps}"
-
-                        // Extract DB credentials from Terraform outputs
-                        env.DB_HOST     = sh(script: "echo '${tfOutputs}' | jq -r '.db_endpoint.value'", returnStdout: true).trim()
-                        env.DB_USER     = sh(script: "echo '${tfOutputs}' | jq -r '.db_username.value'", returnStdout: true).trim()
-                        env.DB_PASSWORD = sh(script: "echo '${tfOutputs}' | jq -r '.db_password.value'", returnStdout: true).trim()
-                        env.DB_NAME     = sh(script: "echo '${tfOutputs}' | jq -r '.db_name.value'", returnStdout: true).trim()
-                        env.APP_LB      = sh(script: "echo '${tfOutputs}' | jq -r '.\"app-lb\".value'", returnStdout: true).trim()
+                        println "output ${tfOutputs}"
                     }
 
                     // Write DB credentials to Ansible vars
