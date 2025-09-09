@@ -1,12 +1,12 @@
-- name: Ensure node user exists
-  ansible.builtin.user:
-    name: node
-    create_home: yes
-
+---
 - name: Copy Node.js application to server
-  ansible.builtin.synchronize:
-    src: "{{ playbook_dir }}/../server/"
+  ansible.builtin.copy:
+    src: server/
     dest: /var/www/server/
-    recursive: yes
-    rsync_opts:
-      - "--chown=node:node"
+    recurse: yes
+    mode: '0644'
+    owner: root
+    group: root
+    directory_mode: '0755'
+    
+
