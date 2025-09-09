@@ -38,69 +38,63 @@ pipeline {
             }
         }
 
+
         stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
-    steps {
-        script {
-            def ec2PublicIps = []
-            def appPrivateIps = []
-            def dbVars = ""
+            steps {
+                script {
+                     def ec2PublicIps = ""
+                     def appPrivateIps =  ""
+                     def dbVars = ""
+                    // Fetch Terraform outputs
+                    dir("${TF_DIR}") {
+                        def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
-            // Fetch Terraform outputs
-            dir("${TF_DIR}") {
-                def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
-                def json = new groovy.json.JsonSlurper().parseText(tfOutputs)
+                            appPrivateIps = tfOutputs["app_private_ips"].value
+                            ec2PublicIps  = tfOutputs["web_public_ips"].value
+                            dbVars = """{
+                                            "db_host": "${tfOutputs["db_endpoint"].value}",
+                                            "db_user": "${tfOutputs["db_username"].value}",
+                                            "db_password": "${tfOutputs["db_password"].value}",
+                                            "db_name": "${tfOutputs["db_name"].value}"
+                                            }"""
+                                        }
 
-                appPrivateIps = json["app_private_ips"].value
-                ec2PublicIps  = json["web_public_ips"].value
+                    // Write DB credentials to Ansible vars
+                    dir("${ANSIBLE_DIR}/roles/app/vars") {
+                        writeFile file: 'db.json', text: dbVars
+                        echo "DB credentials saved to db.json"
+                    }
 
-                dbVars = new groovy.json.JsonOutput().toJson([
-                    db_host    : json["db_endpoint"].value,
-                    db_user    : json["db_username"].value,
-                    db_password: json["db_password"].value,
-                    db_name    : json["db_name"].value
-                ])
-            }
+                    // Generate Ansible inventory
+                    dir("${ANSIBLE_DIR}") {
 
-            // Write DB credentials to Ansible vars
-            dir("${ANSIBLE_DIR}/roles/app/vars") {
-                writeFile file: 'db.json', text: dbVars
-                echo "✅ DB credentials saved to db.json"
-            }
+                        def inventory = new StringBuilder()
+                        
+                        // Bastion host
+                        inventory.append("[bastion]\n")
+                        inventory.append("${ec2PublicIps[0]} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n\n")
 
-            // Generate Ansible inventory
-            dir("${ANSIBLE_DIR}") {
-                def bastionIp = ec2PublicIps[0]   // first public IP as bastion
+                        // Web servers
+                        inventory.append("[web]\n")
+                        ec2PublicIps.each { ip ->
+                            inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n")
+                        }
+                        inventory.append("\n")
 
-                def inventory = new StringBuilder()
+                        // App servers via bastion
+                        inventory.append("[app]\n")
+                        privateList.each { ip ->
+                            inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3 ansible_ssh_common_args='-o ProxyJump=ubuntu@${bastionIp}'\n")
+                        }
 
-                // Bastion host
-                inventory.append("[bastion]\n")
-                inventory.append("${bastionIp} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n\n")
-
-                // Web servers
-                inventory.append("[web]\n")
-                ec2PublicIps.each { ip ->
-                    inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3\n")
+                        writeFile file: 'inventory/hosts.ini', text: inventory.toString()
+                        echo "Generated Ansible inventory with [bastion], [web], and [app] groups."
+                        sh "cat inventory/hosts.ini"
+                    }
                 }
-                inventory.append("\n")
-
-                // App servers via bastion
-                inventory.append("[app]\n")
-                appPrivateIps.each { ip ->
-                    inventory.append("${ip} ansible_user=ubuntu ansible_ssh_private_key_file=${env.WORKSPACE}/terraform/modules/key/todo-app-key ansible_python_interpreter=/usr/bin/python3 ansible_ssh_common_args='-o ProxyJump=ubuntu@${bastionIp}'\n")
-                }
-
-                // Save inventory
-                writeFile file: 'inventory/hosts.ini', text: inventory.toString()
-                echo "✅ Generated Ansible inventory with [bastion], [web], and [app] groups."
-                sh "cat inventory/hosts.ini"
             }
         }
-    }
-}
 
-
-        
         stage('Run Ansible') {
             steps {
                 dir("${ANSIBLE_DIR}") {
