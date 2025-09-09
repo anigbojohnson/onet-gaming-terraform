@@ -38,10 +38,7 @@ pipeline {
             }
         }
 
-
-             import groovy.json.JsonSlurper
-
-stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
+        stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
     steps {
         script {
             def ec2PublicIps = []
@@ -51,17 +48,17 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
                 def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
-                def json = new JsonSlurper().parseText(tfOutputs)
+                def json = new groovy.json.JsonSlurper().parseText(tfOutputs)
 
                 appPrivateIps = json["app_private_ips"].value
                 ec2PublicIps  = json["web_public_ips"].value
 
-                dbVars = """{
-                    "db_host": "${json["db_endpoint"].value}",
-                    "db_user": "${json["db_username"].value}",
-                    "db_password": "${json["db_password"].value}",
-                    "db_name": "${json["db_name"].value}"
-                }"""
+                dbVars = new groovy.json.JsonOutput().toJson([
+                    db_host    : json["db_endpoint"].value,
+                    db_user    : json["db_username"].value,
+                    db_password: json["db_password"].value,
+                    db_name    : json["db_name"].value
+                ])
             }
 
             // Write DB credentials to Ansible vars
@@ -101,7 +98,6 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
         }
     }
 }
-
 
 
         
