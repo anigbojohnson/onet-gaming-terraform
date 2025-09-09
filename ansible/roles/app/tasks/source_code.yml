@@ -3,7 +3,6 @@
   ansible.builtin.copy:
     src: server/
     dest: /var/www/server/
-    recurse: yes
     mode: '0644'
     owner: root
     group: root
