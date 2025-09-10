@@ -16,11 +16,11 @@ output "db_name" {
 }
 
 output "alb_internet_facing_dns" {
-  value = module.alb.alb_internet_facing_dns.dns_name
+  value = module.alb.alb_internet_facing_dns
 }
 
-output "alb_internet_facing_dns" {
-  value = module.alb.alb_internet_facing_dns.dns_name
+output "alb_internal_dns" {
+  value = module.alb.alb_internal_dns
 }
 
 output "web_public_ips" {

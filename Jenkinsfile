@@ -105,7 +105,7 @@ pipeline {
 
 
                 // Internal ALB DNS
-                def internalAlbDns = json["alb_internet_facing_dns"]?.value ?: ''
+                def internalAlbDns = json["alb_internal_dns"]?.value ?: ''
 
                 // Read nginx template file
                 def nginxTemplatePath = "${ANSIBLE_DIR}/roles/web/templates/nginx.conf.j2"
