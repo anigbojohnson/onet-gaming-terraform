@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Page Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="onet.css"> <!-- correct path -->
+</head>
+
+<body onload="fireCanvas();">
+  <nav class="navbar navbar-inverse" style="width:100%;">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">View <i class="bi bi-caret-down-fill"></i></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="#">Zoom <i class="bi bi-caret-right-fill"></i></a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" onclick="increaseOjectSize('one')" href="#">1</a></li>
+                <li><a class="dropdown-item" onclick="increaseOjectSize('two')" href="#">2</a></li>
+                <li><a class="dropdown-item" onclick="increaseOjectSize('three')" href="#">3</a></li>
+                <li><a class="dropdown-item" onclick="increaseOjectSize('four')" href="#">4</a></li>
+              </ul>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Axis <i class="bi bi-caret-right-fill"></i></a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" onclick="fulScreen('on')" href="#">On</a></li>
+                <li><a class="dropdown-item" onclick="fulScreen('collapse')" href="#">Off</a></li>
+              </ul>
+            </li>
+            <li>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" onclick="axisGraph()" href="#">On</a></li>
+                <li><a class="dropdown-item collapse" href="#">Off</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Instruct <i class="bi bi-caret-down-fill"></i></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="#">Partern <i class="bi bi-caret-right-fill"></i></a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" onclick="partern('one')" href="#">1</a></li>
+                <li><a class="dropdown-item" onclick="partern('two')" href="#">2</a></li>
+                <li><a class="dropdown-item" onclick="partern('three')" href="#">3</a></li>
+              </ul>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Block <i class="bi bi-caret-right-fill"></i></a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" onclick="partternImage('animal')" href="#">Animal</a></li>
+                <li><a class="dropdown-item" onclick="partternImage('color')" href="#">Color</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+        <!-- Navbar -->
+    <ul class="nav navbar-nav navbar-right">
+      <li id="loginLinks">
+        <a href="#" data-toggle="modal" data-target="#loginModal">
+          <i class="bi bi-box-arrow-in-right"></i> Login
+        </a>
+      </li>
+      <li id="signupLinks">
+        <a href="#" data-toggle="modal" data-target="#signupModal">
+          <i class="bi bi-person-plus-fill"></i> Sign Up
+        </a>
+      </li>
+      <!-- User name placeholder -->
+      <li id="userName" style="display:none;">
+        <a href="#"><span id="userDisplay"></span></a>
+      </li>
+
+        <li class="nav-item" id="logoutNav" style="display: none;">
+            <a class="nav-link" id="logoutLink" href="#">Logout</a>
+        </li>
+    </ul>
+
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Login</h4>
+      </div>
+      <div class="modal-body">
+        <div id="loginMessage" class="mb-4"></div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email:</label>
+            <input type="text" class="form-control" id="loginEmail" placeholder="Enter email">
+            <div id="loginEmailError" class="text-danger small"></div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password:</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Enter password">
+            <div id="loginPasswordError" class="text-danger small"></div>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Sign Up</h4>
+      </div>
+      <div class="modal-body">
+        <div id="signupMessage" class="mb-3"></div>
+        <form id="signupForm">
+            <div class="form-group">
+              <label for="signupName">Full Name:</label>
+              <input type="text" class="form-control" id="signupName" placeholder="Enter full name">
+              <div id="signupNameError" class="text-danger small"></div>
+            </div>
+            <div class="form-group">
+              <label for="signupEmail">Email:</label>
+              <input type="text" class="form-control" id="signupEmail" placeholder="Enter email">
+              <div id="signupEmailError" class="text-danger small"></div>
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Password:</label>
+              <input type="password" class="form-control" id="signupPassword" placeholder="Enter password">
+              <div id="signupPasswordError" class="text-danger small"></div>
+            </div>
+            <button type="submit" class="btn btn-success">Sign Up</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    </div>
+  </nav>
+
+  <img src="images/cat.jpg" id="cat" style="display:none;">
+  <img src="images/goat.jpg" id="goat" style="display:none;">
+  <img src="images/lion.jpg" id="lion" style="display:none;">
+  <img src="images/fish.jpg" id="fish" style="display:none;">
+  <img src="images/dog.jpg" id="dog" style="display:none;">
+  <img src="images/monkey.jpg" id="monkey" style="display:none;">
+  <img src="images/bird.jpg" id="bird" style="display:none;">
+  <img src="images/hen.jpg" id="hen" style="display:none;">
+  <img src="images/peagon.jpg" id="peagon" style="display:none;">
+
+  <div class="grid-container" id="onet-grid">
+    <div class="tableOne" id="tableOne">
+      <span>
+        <h4>Board</h4>
+      </span>
+      <table id="myMatrix">
+        <tr>
+          <th style="background-color: #dddddd;"></th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+          <th>6</th>
+          <th>7</th>
+          <th>8</th>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">1</td>
+          <td id="00"></td>
+          <td id="01"></td>
+          <td id="02"></td>
+          <td id="03"></td>
+          <td id="04"></td>
+          <td id="05"></td>
+          <td id="06"></td>
+          <td id="07"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">2</td>
+          <td id="10"></td>
+          <td id="11"></td>
+          <td id="12"></td>
+          <td id="13"></td>
+          <td id="14"></td>
+          <td id="15"></td>
+          <td id="16"></td>
+          <td id="17"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">3</td>
+          <td id="20"></td>
+          <td id="21"></td>
+          <td id="22"></td>
+          <td id="23"></td>
+          <td id="24"></td>
+          <td id="25"></td>
+          <td id="26"></td>
+          <td id="27"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">4</td>
+          <td id="30"></td>
+          <td id="31"></td>
+          <td id="32"></td>
+          <td id="33"></td>
+          <td id="34"></td>
+          <td id="35"></td>
+          <td id="36"></td>
+          <td id="37"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">5</td>
+          <td id="40"></td>
+          <td id="41"></td>
+          <td id="42"></td>
+          <td id="43"></td>
+          <td id="44"></td>
+          <td id="45"></td>
+          <td id="46"></td>
+          <td id="47"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">6</td>
+          <td id="50"></td>
+          <td id="51"></td>
+          <td id="52"></td>
+          <td id="53"></td>
+          <td id="54"></td>
+          <td id="55"></td>
+          <td id="56"></td>
+          <td id="57"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">7</td>
+          <td id="60"></td>
+          <td id="61"></td>
+          <td id="62"></td>
+          <td id="63"></td>
+          <td id="64"></td>
+          <td id="65"></td>
+          <td id="66"></td>
+          <td id="67"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">8</td>
+          <td id="70"></td>
+          <td id="71"></td>
+          <td id="72"></td>
+          <td id="73"></td>
+          <td id="74"></td>
+          <td id="75"></td>
+          <td id="76"></td>
+          <td id="77"></td>
+        </tr>
+        <tr>
+          <td style="background-color: #dddddd;">9</td>
+          <td id="80"></td>
+          <td id="81"></td>
+          <td id="82"></td>
+          <td id="83"></td>
+          <td id="84"></td>
+          <td id="85"></td>
+          <td id="86"></td>
+          <td id="87"></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tableTwo" id="tableTwo">
+      <span style="display:grid; grid-template-columns: auto auto;">
+        <h4>Onet Connect</h4>
+        <div class="conainer">
+          <i class="bi bi-shuffle" onclick="shaffleOnet();"></i>
+          <span id="hours">00</span><span>:</span>
+          <span id="minutes">00</span><span>:</span>
+          <span id="seconds">00</span>
+        </div>
+      </span>
+      <canvas class="onet" id="canvas" height="450" width="400"></
+
+    <canvas id="chart" ></canvas>
+  </div>
+</div>
+
+
+<!-- Include jQuery, Bootstrap, and your JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+<script language="javascript" src="js/onetController.js"></script>
+<script language="javascript" src="js/auth.js"></script>
+
+</body>
+</html>
