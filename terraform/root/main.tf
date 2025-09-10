@@ -77,7 +77,7 @@ module "alb" {
   source                = "../modules/alb"
   project_name          = var.project_name
   web_alb_sg_id             = module.security-group.web_sg_id
-  app_sg_id   = module.security_group.app_alb_sg_id
+  app_sg_id   = module.security-group.app_sg_id
   public_subnet_1a_id   = module.vpc.public_subnet_1a_id
   public_subnet_1b_id   = module.vpc.public_subnet_1b_id
   app_subnet_1a_id   = module.vpc.app_subnet_1a_id
