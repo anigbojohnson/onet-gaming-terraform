@@ -115,7 +115,7 @@ pipeline {
                 nginxConfig = nginxConfig.replace("__INTERNAL_ALB_DNS__", internalAlbDns)
 
                 // Write updated Nginx config to role's files folder
-                writeFile file: "${env.WORKSPACE}/${ANSIBLE_DIR}/roles/app/files/nginx.conf", text: nginxConfig
+                writeFile file: "${env.WORKSPACE}/${ANSIBLE_DIR}/roles/web/files/nginx.conf", text: nginxConfig
 
                 echo "Nginx config updated with internal ALB DNS: ${internalAlbDns}"
             }
