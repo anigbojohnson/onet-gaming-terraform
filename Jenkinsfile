@@ -45,13 +45,11 @@ pipeline {
             def ec2PublicIps = []
             def appPrivateIps = []
             def dbVars
+            def json = new groovy.json.JsonSlurper().parseText(tfOutputs)
 
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
                 def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
-
-                def json = new groovy.json.JsonSlurper().parseText(tfOutputs)
-
                 // Assign Terraform output values
                 appPrivateIps = json["app_private_ips"]?.value ?: []
                 ec2PublicIps = json["web_public_ips"]?.value ?: []
