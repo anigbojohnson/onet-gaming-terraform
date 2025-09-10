@@ -111,14 +111,14 @@ pipeline {
         
 
                 // Read nginx template file
-                def nginxTemplatePath = "/roles/web/templates/nginx.conf.j2"
+                def nginxTemplatePath = "${env.WORKSPACE}/${ANSIBLE_DIR}/roles/web/templates/nginx.conf.j2"
                 def nginxConfig = readFile(nginxTemplatePath)
 
                 // Replace placeholder with internal ALB DNS
                 nginxConfig = nginxConfig.replace("__INTERNAL_ALB_DNS__", internalAlbDns)
 
                 // Write updated Nginx config to role's files folder
-                writeFile file: "/roles/app/files/nginx.conf", text: nginxConfig
+                writeFile file: "${env.WORKSPACE}/${ANSIBLE_DIR}/roles/app/files/nginx.conf", text: nginxConfig
 
                 echo "Nginx config updated with internal ALB DNS: ${internalAlbDns}"
             }
