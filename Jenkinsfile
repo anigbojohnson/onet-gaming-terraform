@@ -39,13 +39,13 @@ pipeline {
             }
         }
 
-        stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
+stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
     steps {
         script {
             def ec2PublicIps = []
             def appPrivateIps = []
             def dbVars
-            def json 
+            def json = [:] 
 
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
