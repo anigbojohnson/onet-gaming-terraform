@@ -39,23 +39,26 @@ pipeline {
             }
         }
 
-stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
+        stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
     steps {
         script {
             def ec2PublicIps = []
             def appPrivateIps = []
             def dbVars
-            def json = [:] 
+            def internalAlbDns =""
 
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
                 def tfOutputs = sh(script: "terraform output -json", returnStdout: true).trim()
 
-                json = new groovy.json.JsonSlurper().parseText(tfOutputs)
+                def json = new groovy.json.JsonSlurper().parseText(tfOutputs)
 
                 // Assign Terraform output values
                 appPrivateIps = json["app_private_ips"]?.value ?: []
                 ec2PublicIps = json["web_public_ips"]?.value ?: []
+
+                 // Internal ALB DNS
+                internalAlbDns = json["alb_internal_dns"]?.value ?: ''
                 
                 println "EC2 Public IPs: ${ec2PublicIps}"
 
@@ -105,8 +108,7 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
                 sh "cat inventory/hosts.ini"
 
 
-                // Internal ALB DNS
-                def internalAlbDns = json["alb_internal_dns"]?.value ?: ''
+        
 
                 // Read nginx template file
                 def nginxTemplatePath = "${ANSIBLE_DIR}/roles/web/templates/nginx.conf.j2"
