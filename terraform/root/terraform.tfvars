@@ -12,6 +12,7 @@ pub_sub_1b_cidr = "10.0.2.0/24"
 priv_sub_2b_cidr = "10.0.4.0/24"
 priv_sub_3b_cidr = "10.0.6.0/24"
 
+
 db_username = "admin"
 db_password = "Charis123$"
 

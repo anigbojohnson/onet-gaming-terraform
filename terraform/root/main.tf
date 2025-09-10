@@ -47,27 +47,16 @@ module "rds" {
 }
 
 
-# Creating Application Load balancer
-module "alb" {
-  source         = "../modules/alb"
-  project_name   = var.project_name
-  alb_sg_id      = module.security-group.web_sg_id
-  public_subnet_1a_id = module.vpc.public_subnet_1a_id
-  public_subnet_1b_id = module.vpc.public_subnet_1b_id
-  vpc_id         = module.vpc.vpc_id
-}
-
-
-
 module "ec2_app" {
-  source        = "../modules/ec2"
-  project_name  = var.project_name
-  ami_id        = var.ami_id
-  instance_type = var.instance_type
-  subnet_id     = module.vpc.app_subnet_1b_id   # both go to same subnet
-  key_name      = module.key.key_name
+  source         = "../modules/ec2"
+  project_name   = var.project_name
+  ami_id         = var.ami_id
+  instance_type  = var.instance_type
+  subnet_id      = module.vpc.app_subnet_1b_id  # Private subnet for app servers
+  key_name       = module.key.key_name
   security_group = module.security-group.app_sg_id
 }
+
 
 module "ec2_web" {
   source        = "../modules/ec2"
@@ -82,6 +71,18 @@ module "ec2_web" {
   key_name      = module.key.key_name
   security_group = module.security-group.web_sg_id
 }
+
+# Creating Application Load balancer
+module "alb" {
+  source                = "../modules/alb"
+  project_name          = var.project_name
+  alb_sg_id             = module.security-group.web_sg_id
+  public_subnet_1a_id   = module.vpc.public_subnet_1a_id
+  public_subnet_1b_id   = module.vpc.public_subnet_1b_id
+  web_aws_instance_ids  = flatten([for m in module.ec2_web : m.instance_ids])
+  vpc_id                = module.vpc.vpc_id
+}
+
 
 # Add record in route 53 hosted zone
 module "route53" {

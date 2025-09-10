@@ -7,5 +7,10 @@ output "ec2_private_ip" {
   value = aws_instance.this.private_ip
 }
 
+output "instance_ids" {
+  value = aws_instance.this.*.id
+}
+
+
 
 
