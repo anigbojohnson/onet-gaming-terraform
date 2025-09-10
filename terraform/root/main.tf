@@ -49,6 +49,7 @@ module "rds" {
 
 module "ec2_app" {
   source         = "../modules/ec2"
+  count         = terraform.workspace == "prod" ? 2 : 1   # 2 in prod, 1 in dev
   project_name   = var.project_name
   ami_id         = var.ami_id
   instance_type  = var.instance_type
