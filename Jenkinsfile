@@ -107,9 +107,6 @@ pipeline {
                 echo "Generated Ansible inventory with [bastion], [web], and [app] groups."
                 sh "cat inventory/hosts.ini"
 
-
-        
-
                 // Read nginx template file
                 def nginxTemplatePath = "${env.WORKSPACE}/${ANSIBLE_DIR}/roles/web/templates/nginx.conf.j2"
                 def nginxConfig = readFile(nginxTemplatePath)
