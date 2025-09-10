@@ -76,10 +76,14 @@ module "ec2_web" {
 module "alb" {
   source                = "../modules/alb"
   project_name          = var.project_name
-  alb_sg_id             = module.security-group.web_sg_id
+  web_alb_sg_id             = module.security-group.web_sg_id
+  app_sg_id   = module.security_group.app_alb_sg_id
   public_subnet_1a_id   = module.vpc.public_subnet_1a_id
   public_subnet_1b_id   = module.vpc.public_subnet_1b_id
+  app_subnet_1a_id   = module.vpc.app_subnet_1a_id
+  app_subnet_1b_id   = module.vpc.app_subnet_1b_id
   web_aws_instance_ids  = flatten([for m in module.ec2_web : m.instance_ids])
+  app_aws_instance_ids  = flatten([for m in module.ec2_app : m.instance_ids])
   vpc_id                = module.vpc.vpc_id
 }
 

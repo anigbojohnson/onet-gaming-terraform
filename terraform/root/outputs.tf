@@ -15,8 +15,12 @@ output "db_name" {
   value = module.rds.db_name
 }
 
-output "app-lb" {
-  value = module.alb.alb_dns_name
+output "alb_internet_facing_dns" {
+  value = module.alb.alb_internet_facing_dns.dns_name
+}
+
+output "alb_internet_facing_dns" {
+  value = module.alb.alb_internet_facing_dns.dns_name
 }
 
 output "web_public_ips" {
@@ -28,8 +32,6 @@ output "app_private_ips" {
   description = "Private IPs of app servers"
   value       = module.ec2_app[*].ec2_private_ip
 }
-
-
 
 
 

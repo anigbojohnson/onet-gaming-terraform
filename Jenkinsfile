@@ -31,7 +31,7 @@ pipeline {
   
   
                         # Create resources
-                     #  terraform apply -auto-approve
+                        terraform apply -auto-approve
 
                         """
                     }
@@ -102,6 +102,22 @@ pipeline {
                 writeFile file: 'inventory/hosts.ini', text: inventory.toString()
                 echo "Generated Ansible inventory with [bastion], [web], and [app] groups."
                 sh "cat inventory/hosts.ini"
+
+
+                // Internal ALB DNS
+                def internalAlbDns = json["alb_internet_facing_dns"]?.value ?: ''
+
+                // Read nginx template file
+                def nginxTemplatePath = "${ANSIBLE_DIR}/roles/web/templates/nginx.conf.j2"
+                def nginxConfig = readFile(nginxTemplatePath)
+
+                // Replace placeholder with internal ALB DNS
+                nginxConfig = nginxConfig.replace("__INTERNAL_ALB_DNS__", internalAlbDns)
+
+                // Write updated Nginx config to role's files folder
+                writeFile file: "${ANSIBLE_DIR}/roles/app/files/nginx.conf", text: nginxConfig
+
+                echo "Nginx config updated with internal ALB DNS: ${internalAlbDns}"
             }
         }
     }

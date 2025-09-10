@@ -8,9 +8,14 @@ output "alb_zone_id" {
   value       = aws_lb.application_load_balancer.zone_id
 }
 
-output "alb_arn" {
-  description = "The ARN of the load balancer"
-  value       = aws_lb.application_load_balancer.arn
+output "alb_internet_facing_dns" {
+  description = "The dns name of internet facing load balancer"
+  value       = aws_lb.application_load_balancer.dns_name
+}
+
+output "alb_internal_arn" {
+  description = "The dns name of internal of load balancer"
+  value       = aws_lb.internal_alb.dns_name
 }
 
 output "tgt_arn" {
