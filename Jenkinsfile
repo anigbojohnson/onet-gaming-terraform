@@ -64,6 +64,7 @@ pipeline {
 
                 // Construct DB credentials JSON
                 dbVars = """{
+                    "alb_internet_facing_dns": "${json["alb_internet_facing_dns"]?.value ?: ''}",
                     "alb_internal_dns": "${json["alb_internal_dns"]?.value ?: ''}",
                     "db_host": "${json["db_endpoint"]?.value ?: ''}",
                     "db_user": "${json["db_username"]?.value ?: ''}",

@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 // Enable CORS
 app.use(cors({
-  origin: "http://localhost:8080", // your frontend URL
+  origin: process.env.CLIENT_ORIGIN,
   credentials: true
 }));
 
