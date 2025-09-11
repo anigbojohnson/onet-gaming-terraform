@@ -7,11 +7,12 @@
 # vars/main.yml
 
 tf_outputs: "{{ lookup('file', role_path + '/vars/db.json') | from_json }}"
+alb_internal_dns: "{{ tf_outputs.alb_internal_dns }}"
 db_host: "{{ tf_outputs.db_host }}"
 db_user: "{{ tf_outputs.db_user }}"
 db_password: "{{ tf_outputs.db_password }}"
 db_name: "{{ tf_outputs.db_name }}"
-db_port: 3306  # default MySQL port
+db_port: 5432  # default Postgres port
 
 
 
