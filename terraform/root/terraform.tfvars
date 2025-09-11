@@ -13,7 +13,7 @@ priv_sub_2b_cidr = "10.0.4.0/24"
 priv_sub_3b_cidr = "10.0.6.0/24"
 
 
-db_username = "admin"
+db_username = "johnson_admin"
 db_password = "Charis123$"
 
 
