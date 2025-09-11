@@ -1,14 +1,23 @@
 ---
+- name: Ensure app directory exists
+  file:
+    path: /opt/server
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+
 - name: Generate .env file for app
   template:
     src: templates/.env.j2
-    dest: /var/www/server/.env
+    dest: /opt/server/.env
     mode: '0600'
 
 - name: Copy Node.js application to server
   ansible.builtin.copy:
     src: server/
-    dest: /var/www/server/
+    dest: /opt/server/
     mode: '0644'
     owner: root
     group: root

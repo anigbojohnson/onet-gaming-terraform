@@ -33,8 +33,10 @@
   ansible.builtin.debug:
     msg: "{{ npm_version.stdout }}"
 
+
+
 - name: Create systemd service for Node.js app
-  ansible.builtin.copy:
+  copy:
     dest: /etc/systemd/system/myapp.service
     content: |
       [Unit]
@@ -42,14 +44,12 @@
       After=network.target
 
       [Service]
-      ExecStart=/usr/bin/node /var/www/server/app.js
+      ExecStart=/usr/bin/node /opt/server/app.js
       Restart=always
       User=node
       Group=node
       Environment=PATH=/usr/bin:/usr/local/bin
-      WorkingDirectory=/var/www/server
+      WorkingDirectory=/opt/server
 
       [Install]
       WantedBy=multi-user.target
-  
-
