@@ -27,10 +27,9 @@ pipeline {
                         terraform workspace select ${params.WORKSPACE_NAME}
 
                         # Destroy resources (optional)
-                      # terraform destroy -auto-approve
+                       terraform destroy -auto-approve
   
-  
-                        # Create resources
+                          # Create resources
                        terraform apply -auto-approve
 
                         """
