@@ -12,7 +12,7 @@ db_host: "{{ tf_outputs.db_host }}"
 db_user: "{{ tf_outputs.db_user }}"
 db_password: "{{ tf_outputs.db_password }}"
 db_name: "{{ tf_outputs.db_name }}"
-db_port: 5432  # default Postgres port
+db_port:  "{{ tf_outputs.db_port }}"  # default Postgres port
 
 
 

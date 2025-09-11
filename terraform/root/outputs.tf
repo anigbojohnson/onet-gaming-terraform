@@ -33,7 +33,9 @@ output "app_private_ips" {
   value       = module.ec2_app[*].ec2_private_ip
 }
 
-
+output "db_port" {
+  value = aws_db_instance.rds_instance.port
+}
 
 
 

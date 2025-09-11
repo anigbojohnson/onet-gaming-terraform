@@ -51,6 +51,5 @@
 
       [Install]
       WantedBy=multi-user.target
-  notify:
-    - Restart Node.js App
+  
 

@@ -14,3 +14,5 @@
     group: root
     directory_mode: '0755'
     
+  notify:
+    - Restart Node.js App  

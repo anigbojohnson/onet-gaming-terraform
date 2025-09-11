@@ -1,46 +1,43 @@
 ---
-# tasks file for todo_role (Ubuntu Noble)
+# tasks file for todo_role (Ubuntu Noble) - PostgreSQL
 
 - name: Ensure prerequisites are installed
   apt:
     name:
       - python3-pip
-      - mysql-server
+      - postgresql-client
+      - postgresql
+      - libpq-dev
+      - python3-psycopg2
     state: present
     update_cache: yes
 
-- name: Start and enable MySQL service
+- name: Start and enable PostgreSQL service
   systemd:
-    name: mysql
+    name: postgresql
     state: started
     enabled: yes
 
-- name: Install PyMySQL system package
-  apt:
-    name: python3-pymysql
-    state: present
-
-
 - name: Ensure database exists
-  community.mysql.mysql_db:
+  community.postgresql.postgresql_db:
     name: "{{ db_name }}"
     state: present
     login_host: "{{ db_host }}"
     login_user: "{{ db_user }}"
     login_password: "{{ db_password }}"
-
+    login_port: "{{ db_port | default(5432) }}"
 
 - name: Create tasks table
-  community.mysql.mysql_query:
+  community.postgresql.postgresql_query:
     query: |
       CREATE TABLE IF NOT EXISTS tasks (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
-        status TINYINT(1) DEFAULT 0,
+        status BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     login_host: "{{ db_host }}"
-    login_port: "{{ db_port }}"
+    login_port: "{{ db_port | default(5432) }}"
     login_user: "{{ db_user }}"
     login_password: "{{ db_password }}"
-    login_db: "{{ db_name }}"
+    db: "{{ db_name }}"
