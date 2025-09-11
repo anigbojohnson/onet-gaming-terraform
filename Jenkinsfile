@@ -31,7 +31,7 @@ pipeline {
   
   
                         # Create resources
-                        terraform apply -auto-approve
+                      #  terraform apply -auto-approve
 
                         """
                     }
