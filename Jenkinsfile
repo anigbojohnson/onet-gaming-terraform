@@ -31,7 +31,7 @@ pipeline {
                         terraform destroy -auto-approve
   
                         # Create resources
-                        terraform apply -auto-approve
+                        # terraform apply -auto-approve
 
                         """
                     }
