@@ -34,7 +34,7 @@ output "app_private_ips" {
 }
 
 output "db_port" {
-  value = aws_db_instance.rds_instance.port
+  value = module.rds.db_port
 }
 
 

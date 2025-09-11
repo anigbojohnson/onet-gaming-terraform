@@ -14,3 +14,7 @@ output "db_password" {
 output "db_name" {
   value = var.db_name
 }
+
+output "db_port" {
+  value = aws_db_instance.rds_instance.port
+}
