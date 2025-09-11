@@ -1,4 +1,10 @@
 ---
+- name: Generate .env file for app
+  template:
+    src: templates/.env.j2
+    dest: /var/www/server/.env
+    mode: '0600'
+
 - name: Copy Node.js application to server
   ansible.builtin.copy:
     src: server/
