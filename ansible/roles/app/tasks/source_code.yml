@@ -21,6 +21,7 @@
     dest: /opt/server/
     recursive: yes
     delete: yes
+    
 
     
   notify:
