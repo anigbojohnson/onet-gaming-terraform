@@ -15,12 +15,23 @@
     mode: '0600'
 
 
-- name: Copy Node.js application to server
-  ansible.posix.synchronize:
-    src: /server
-    dest: /opt/server/
-    recursive: yes
-    delete: yes
+- name: Archive Node.js app
+  local_action:
+    module: archive
+    path: ./server
+    dest: /tmp/server.tar.gz
+
+- name: Copy archive to server
+  copy:
+    src: /tmp/server.tar.gz
+    dest: /tmp/server.tar.gz
+
+- name: Extract app on server
+  unarchive:
+    src: /tmp/server.tar.gz
+    dest: /opt/
+    remote_src: yes
+
 
 
     
