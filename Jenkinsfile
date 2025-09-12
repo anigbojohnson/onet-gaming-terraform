@@ -4,6 +4,7 @@ pipeline {
         string(name: 'WORKSPACE_NAME', defaultValue: 'dev', description: 'Terraform workspace')
     }
 
+
     environment {
         TF_DIR = 'terraform/root'   // Path to Terraform folder
         ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
@@ -31,7 +32,7 @@ pipeline {
                         terraform destroy -auto-approve
   
                         # Create resources
-                      # terraform apply -auto-approve
+                       terraform apply -auto-approve
 
                         """
                     }
