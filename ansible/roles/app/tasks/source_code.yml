@@ -14,14 +14,14 @@
     dest: /opt/server/.env
     mode: '0600'
 
+
 - name: Copy Node.js application to server
-  ansible.builtin.copy:
-    src: server/
+  ansible.posix.synchronize:
+    src: ./server/
     dest: /opt/server/
-    mode: '0644'
-    owner: root
-    group: root
-    directory_mode: '0755'
+    recursive: yes
+    delete: yes
+
     
   notify:
     - Restart Node.js App  
