@@ -16,13 +16,14 @@
 
 
 - name: Archive Node.js app
-  archive:
+  local_action:
+    module: archive
     path: ./server
-    dest: "{{ role_path }}/files/server.tar.gz"   # put archive in role's files folder
+    dest: "{{ role_path }}/files/server.tar.gz"
 
 - name: Copy archive to server
   copy:
-    src: "{{ role_path }}/files/server.tar.gz"    # copy from role's files folder
+    src: "{{ role_path }}/files/server.tar.gz"
     dest: /tmp/server.tar.gz
 
 - name: Extract app on server
@@ -30,9 +31,6 @@
     src: /tmp/server.tar.gz
     dest: /opt/
     remote_src: yes
-
-
-
     
   notify:
     - Restart Node.js App  
