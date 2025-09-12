@@ -31,7 +31,7 @@ pipeline {
                         terraform destroy -auto-approve
   
                         # Create resources
-                       # terraform apply -auto-approve
+                       terraform apply -auto-approve
 
                         """
                     }
@@ -87,11 +87,7 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
                 echo "DB credentials saved to db.json"
             }
 
-             // Write web credentials to Ansible vars
-            dir("${ANSIBLE_DIR}/roles/web/vars") {
-                writeFile file: 'config.json', text: webVars
-                echo "config credentials saved to config.json"
-            }
+
             // Generate Ansible inventory
             dir("${ANSIBLE_DIR}") {
                 def inventory = new StringBuilder()

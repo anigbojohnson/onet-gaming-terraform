@@ -60,7 +60,7 @@ $(document).on("submit", "#loginForm", function(e) {
   }
 
   $.ajax({
-    url: window.ENV.API_URL+"/auth/login",
+    url: "/auth/login",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify(data),
@@ -105,7 +105,7 @@ $(document).on("submit", "#signupForm", function(e) {
   }
 
   $.ajax({
-    url: window.ENV.API_URL+"/auth/signup",
+    url: "/auth/signup",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify(data),
@@ -134,7 +134,7 @@ $(document).on("submit", "#signupForm", function(e) {
 
 
 $.ajax({
-  url: window.ENV.API_URL+"/auth/current-user",
+  url: "/auth/current-user",
   method: "GET",
   xhrFields: {
     withCredentials: true   // 👈 required for session cookies
