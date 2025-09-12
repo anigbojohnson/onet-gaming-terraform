@@ -19,11 +19,11 @@
   local_action:
     module: archive
     path: ./server
-    dest: /tmp/server.tar.gz
+    dest: /server/server.tar.gz
 
 - name: Copy archive to server
   copy:
-    src: /tmp/server.tar.gz
+    src: /server/server.tar.gz
     dest: /tmp/server.tar.gz
 
 - name: Extract app on server
