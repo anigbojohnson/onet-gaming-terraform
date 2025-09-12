@@ -7,6 +7,12 @@
     owner: root
     group: root
     directory_mode: '0755'
+    
+- name: Deploy frontend config.js
+  template:
+    src: templates/config.js.j2
+    dest: /var/www/html/config.js
+    mode: '0644'
 
 
     

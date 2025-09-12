@@ -60,7 +60,7 @@ $(document).on("submit", "#loginForm", function(e) {
   }
 
   $.ajax({
-    url: "http://localhost:3000/auth/login",
+    url: window.ENV.API_URL+"/auth/login",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify(data),
@@ -105,7 +105,7 @@ $(document).on("submit", "#signupForm", function(e) {
   }
 
   $.ajax({
-    url: "http://localhost:3000/auth/signup",
+    url: window.ENV.API_URL+"/auth/signup",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify(data),
@@ -134,7 +134,7 @@ $(document).on("submit", "#signupForm", function(e) {
 
 
 $.ajax({
-  url: "http://localhost:3000/auth/current-user",
+  url: window.ENV.API_URL+"/auth/current-user",
   method: "GET",
   xhrFields: {
     withCredentials: true   // 👈 required for session cookies
@@ -166,7 +166,7 @@ $.ajax({
       e.preventDefault(); // prevent default link behavior
 
       $.ajax({
-        url: "http://localhost:3000/auth/logout", // your logout endpoint
+        url: window.ENV.API_URL+"/auth/logout", // your logout endpoint
         method: "POST", // safer to use POST
         xhrFields: {
           withCredentials: true // include the cookie

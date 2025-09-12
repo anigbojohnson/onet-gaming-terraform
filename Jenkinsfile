@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
+stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
     steps {
         script {
             def ec2PublicIps = []
