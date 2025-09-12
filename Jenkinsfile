@@ -65,7 +65,7 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
 
                 webVars = """{
                     "alb_internet_facing_dns": "${json["alb_internet_facing_dns"]?.value ?: ''}",
-                    "alb_internal_dns": "${json["alb_internal_dns"]?.value ?: ''}",
+                    "alb_internal_dns": "${json["alb_internal_dns"]?.value ?: ''}"
                    
                 }"""
 
