@@ -17,11 +17,11 @@
 
 - name: Copy Node.js application to server
   ansible.posix.synchronize:
-    src: ./server/
+    src: /server
     dest: /opt/server/
     recursive: yes
     delete: yes
-    
+
 
     
   notify:
