@@ -46,6 +46,7 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
             def appPrivateIps = []
             def dbVars
             def internalAlbDns =""
+            def webVars = ""
 
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
@@ -61,6 +62,12 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
                 internalAlbDns = json["alb_internal_dns"]?.value ?: ''
                 
                 println "EC2 Public IPs: ${ec2PublicIps}"
+
+                webVars = """{
+                    "alb_internet_facing_dns": "${json["alb_internet_facing_dns"]?.value ?: ''}",
+                    "alb_internal_dns": "${json["alb_internal_dns"]?.value ?: ''}",
+                   
+                }"""
 
                 // Construct DB credentials JSON
                 dbVars = """{
@@ -80,6 +87,11 @@ stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
                 echo "DB credentials saved to db.json"
             }
 
+             // Write web credentials to Ansible vars
+            dir("${ANSIBLE_DIR}/roles/web/vars") {
+                writeFile file: 'config.json', text: webVars
+                echo "config credentials saved to config.json"
+            }
             // Generate Ansible inventory
             dir("${ANSIBLE_DIR}") {
                 def inventory = new StringBuilder()

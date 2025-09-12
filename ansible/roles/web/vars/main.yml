@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT-0
+# vars file for server
+# vars/main.yml
+
+# SPDX-License-Identifier: MIT-0
+# vars file for server
+# vars/main.yml
+
+tf_outputs: "{{ lookup('file', role_path + '/vars/config.json') | from_json }}"
+alb_internal_dns: "{{ tf_outputs.alb_internal_dns }}"
+alb_internet_facing_dns: "{{ tf_outputs.alb_internet_facing_dns }}"
+
+
+
+
+
+
