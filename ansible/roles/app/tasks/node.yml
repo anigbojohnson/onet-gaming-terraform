@@ -20,6 +20,7 @@
 - name: Check Node.js version
   ansible.builtin.command: node -v
   register: node_version
+  
 
 - name: Show Node.js version
   ansible.builtin.debug:
