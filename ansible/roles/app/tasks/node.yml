@@ -5,12 +5,10 @@
     state: latest
     update_cache: yes
 
-
 - name: Add NodeSource Node.js repo
-  ansible.builtin.command: curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
+  ansible.builtin.shell: curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
   args:
-    warn: false
-  changed_when: false
+    executable: /bin/bash
 
 - name: Install Node.js and npm
   ansible.builtin.dnf:
