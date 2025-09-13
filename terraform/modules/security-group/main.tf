@@ -73,7 +73,8 @@ resource "aws_security_group" "alb_public_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    security_groups = [aws_security_group.web_sg.id]
+    cidr_blocks = ["0.0.0.0/0"]
+
   }
 
   tags = {
@@ -111,7 +112,8 @@ resource "aws_security_group" "alb_internal_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = -1
-    security_groups = [aws_security_group.app_sg.id]
+    cidr_blocks = ["0.0.0.0/0"]
+
   }
 
   tags = {
