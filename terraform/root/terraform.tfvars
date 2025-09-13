@@ -14,7 +14,7 @@ priv_sub_3b_cidr = "10.0.6.0/24"
 
 
 db_username = "johnson_admin"
-db_password = "Charis123$"
+db_password = "Charis123"
 
 
 ami_id = "ami-02cd88833283fc609"
