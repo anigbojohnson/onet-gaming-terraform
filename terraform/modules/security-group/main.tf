@@ -29,6 +29,7 @@ resource "aws_security_group" "web_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # Replace with your IP
   }
+  
 
   egress {
     description = "Allow outbound to internal ALB and internet"
