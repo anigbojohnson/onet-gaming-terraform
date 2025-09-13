@@ -11,7 +11,7 @@
     executable: /bin/bash
 
 - name: Install Node.js and npm
-  ansible.builtin.dnf:
+  ansible.builtin.apt:
     name:
       - nodejs
       - npm
@@ -20,7 +20,6 @@
 - name: Check Node.js version
   ansible.builtin.command: node -v
   register: node_version
-  
 
 - name: Show Node.js version
   ansible.builtin.debug:
@@ -34,10 +33,15 @@
   ansible.builtin.debug:
     msg: "{{ npm_version.stdout }}"
 
-
+- name: Create node user if not exists
+  ansible.builtin.user:
+    name: node
+    system: yes
+    create_home: no
+    shell: /usr/sbin/nologin
 
 - name: Create systemd service for Node.js app
-  copy:
+  ansible.builtin.copy:
     dest: /etc/systemd/system/myapp.service
     content: |
       [Unit]
