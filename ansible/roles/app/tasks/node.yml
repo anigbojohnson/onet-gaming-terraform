@@ -4,9 +4,10 @@
     state: present
 
 - name: Add NodeSource Node.js repo for Ubuntu 22.04 (jammy)
-  ansible.builtin.shell: curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - -y
+  ansible.builtin.shell: curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
   args:
     executable: /bin/bash
+
 
 - name: Update apt cache
   ansible.builtin.apt:
