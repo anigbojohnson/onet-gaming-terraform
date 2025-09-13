@@ -3,7 +3,7 @@ resource "aws_lb" "application_load_balancer" {
   name               = "${var.project_name}-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [var.web_alb_sg_id]
+  security_groups    = [var.internet_alb_sg_id]
   subnets            = [var.public_subnet_1a_id,var.public_subnet_1b_id]
   enable_deletion_protection = false
 
@@ -64,7 +64,7 @@ resource "aws_lb" "internal_alb" {
   name               = "${var.project_name}-internal-alb"
   internal           = true
   load_balancer_type = "application"
-  security_groups    = [var.app_sg_id] # security group that allows only web tier SG inbound
+  security_groups    = [var.internal_sg_id] # security group that allows only web tier SG inbound
   subnets            = [var.app_subnet_1a_id, var.app_subnet_1b_id]
   enable_deletion_protection = false
 

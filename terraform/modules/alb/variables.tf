@@ -1,6 +1,6 @@
 variable project_name {}
-variable web_alb_sg_id {}
-variable app_sg_id {
+variable internet_alb_sg_id {}
+variable internal_sg_id {
   
 }
 variable public_subnet_1a_id {}
