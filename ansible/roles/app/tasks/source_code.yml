@@ -15,11 +15,13 @@
     mode: '0600'
 
 
-- name: Archive Node.js app
+- name: Archive Node.js app locally
   local_action:
     module: archive
-    path: ./server
+    path: "{{ playbook_dir }}/server"
     dest: "{{ role_path }}/files/server.tar.gz"
+  run_once: true
+  delegate_to: localhost
 
 - name: Copy archive to server
   copy:
@@ -31,6 +33,7 @@
     src: /tmp/server.tar.gz
     dest: /opt/
     remote_src: yes
+
     
   notify:
     - Restart Node.js App  
