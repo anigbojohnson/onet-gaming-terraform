@@ -17,11 +17,11 @@ output "db_sg_id" {
 
 output "public_alb_sg_id" {
   description = "ID of the Security Group for the Internet-facing ALB"
-  value       = aws_security_group.public_alb_sg.id
+  value       = aws_security_group.alb_public_sg.id
 }
 
 output "internal_alb_sg_id" {
   description = "ID of the Security Group for the Internal ALB"
-  value       = aws_security_group.internal_alb_sg.id
+  value       = aws_security_group.alb_internal_sg.id
 }
 
