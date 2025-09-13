@@ -1,8 +1,10 @@
 ---
 - name: Ensure system packages are up to date
-  ansible.builtin.dnf:
+  ansible.builtin.apt:
     name: "*"
     state: latest
+    update_cache: yes
+
 
 - name: Add NodeSource Node.js repo
   ansible.builtin.command: curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
