@@ -13,13 +13,13 @@
   ansible.builtin.apt:
     update_cache: yes
 
-- name: Install Node.js and npm
+
+- name: Install Node.js
   ansible.builtin.apt:
-    name:
-      - nodejs
-      - npm 
+    name: nodejs
     state: present
     update_cache: yes
+
 
 - name: Check Node.js version
   ansible.builtin.command: node -v
