@@ -42,6 +42,7 @@
       User=node
       Group=node
       Environment=PATH=/usr/bin:/usr/local/bin
+      EnvironmentFile=/opt/server/.env
       WorkingDirectory=/opt/server
 
       [Install]
