@@ -139,6 +139,15 @@ resource "aws_security_group" "app_sg" {
     security_groups = [aws_security_group.alb_internal_sg.id]
   }
 
+  ingress {
+  description     = "SSH from web tier as bastion host"
+  from_port       = 22
+  to_port         = 22
+  protocol        = "tcp"
+  security_groups = [aws_security_group.web_sg.id]
+}
+
+
   egress {
     description = "Allow outbound to DB and internet"
     from_port   = 0
