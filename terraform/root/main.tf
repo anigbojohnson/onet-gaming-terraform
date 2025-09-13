@@ -73,6 +73,7 @@ module "ec2_web" {
   security_group = module.security-group.web_sg_id
 }
 
+
 # Creating Application Load balancer
 module "alb" {
   source                = "../modules/alb"
