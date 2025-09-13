@@ -21,22 +21,6 @@
     update_cache: yes
 
 
-- name: Check Node.js version
-  ansible.builtin.command: node -v
-  register: node_version
-
-- name: Show Node.js version
-  ansible.builtin.debug:
-    msg: "{{ node_version.stdout }}"
-
-- name: Check npm version
-  ansible.builtin.command: npm -v
-  register: npm_version
-
-- name: Show npm version
-  ansible.builtin.debug:
-    msg: "{{ npm_version.stdout }}"
-
 - name: Create node user if not exists
   ansible.builtin.user:
     name: node
@@ -46,7 +30,7 @@
 
 - name: Create systemd service for Node.js app
   ansible.builtin.copy:
-    dest: /etc/systemd/system/myapp.service
+    dest: /etc/systemd/system/onet-gaming.service
     content: |
       [Unit]
       Description=My Node.js App
