@@ -4,7 +4,6 @@ pipeline {
         string(name: 'WORKSPACE_NAME', defaultValue: 'dev', description: 'Terraform workspace')
     }
 
-
     environment {
         TF_DIR = 'terraform/root'   // Path to Terraform folder
         ANSIBLE_DIR = 'ansible'     // Path to Ansible folder
@@ -13,7 +12,7 @@ pipeline {
 
     stages {
 
-        stage('Terraform Init & Select Workspace') {
+        stage('Terraform Init, create  & Select Workspace') {
             steps {
                 dir("${TF_DIR}") {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
@@ -27,12 +26,11 @@ pipeline {
                         # Select the chosen workspace
                         terraform workspace select ${params.WORKSPACE_NAME}
 
-
                         # Destroy resources (optional)
                         terraform destroy -auto-approve
   
                         # Create resources
-                         terraform apply -auto-approve
+                       # terraform apply -auto-approve
 
                         """
                     }
