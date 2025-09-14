@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Deploy static website to S3
+  amazon.aws.s3:
+    bucket: "{{ s3_bucket_name }}"
+    object: "{{ item | basename }}"
+    src: "{{ item }}"
+    mode: put
+    acl: public-read
+  with_fileglob:
+    - "{{ "website" }}/*"
+  loop_control:
+    label: "{{ item | basename }}"

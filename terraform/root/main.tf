@@ -90,14 +90,25 @@ module "alb" {
 }
 
 
+# Add record in Route 53 hosted zone
+module "s3-static-website" {
+  source = "../modules/cm"
+  alb_arn = module.alb.alb_internet_facing_arn
+  tg_arn  = module.alb.tgt_arn
+  domain_name  = var.domain_name
+  hosted_zone_id = module.route53.hosted_zone_id
+}
+
+
 # Add record in route 53 hosted zone
 module "route53" {
   source = "../modules/route53"
   alb_dns_name = module.alb.alb_dns_name
   alb_zone_id = module.alb.alb_zone_id
-  s3_website_endpoint = var.s3_website_endpoint
-  s3_website_zone_id = var.s3_website_zone_id
+  s3_website_zone_id = module.route53.s3_website_zone_id
   domain_name = var.domain_name
+  s3_website_endpoint = module.route53.s3_website_endpoint
+
 }
 
 
@@ -108,16 +119,10 @@ module "cm" {
   tg_arn  = module.alb.tgt_arn
   domain_name         = var.domain_name
   hosted_zone_id      = module.route53.hosted_zone_id
+  
 }
 
-# Add record in Route 53 hosted zone
-module "s3-static-website" {
-  source = "../modules/cm"
-  alb_arn        = module.alb.alb_internet_facing_arn
-  tg_arn  = module.alb.tgt_arn
-  domain_name         = var.domain_name
-  hosted_zone_id      = module.route53.hosted_zone_id
-}
+
 
 
 

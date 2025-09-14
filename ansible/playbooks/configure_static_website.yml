@@ -1,0 +1,5 @@
+- name: Upload website files to S3 bucket
+  hosts: localhost
+  become: yes
+  roles:
+    - static-website

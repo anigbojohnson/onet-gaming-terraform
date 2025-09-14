@@ -77,16 +77,6 @@ variable "db_name" {
   type        = string
 }
 
-variable "s3_website_endpoint" {
-  description = "The DNS endpoint of the static website hosted on S3"
-  type        = string
-}
-
-variable "s3_website_zone_id" {
-  description = "The Route 53 hosted zone ID for the S3 website endpoint (region-specific)"
-  type        = string
-  default     = "Z3GKZC51ZF0DB4"  # eu-west-2 — you can override if needed
-}
 
 variable "domain_name" {
   description = "The domain name for the application and ACM certificate"

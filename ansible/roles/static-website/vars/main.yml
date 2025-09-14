@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT-0
+# vars file for server
+
+
+tf_outputs: "{{ lookup('file', role_path + '/vars/websiteInfo.json') | from_json }}"
+aws_s3_bucket: "{{ tf_outputs.aws_s3_bucket }}"
+
+
+
+
+
+

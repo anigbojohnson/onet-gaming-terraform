@@ -44,6 +44,7 @@ pipeline {
                     def dbVars
                     def internalAlbDns =""
                     def webVars = ""
+                    def websiteInfo = ""
 
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
@@ -76,6 +77,11 @@ pipeline {
                     "db_name": "${json["db_name"]?.value ?: ''}",
                     "db_port": "${json["db_port"]?.value ?: ''}"
                 }"""
+
+                // Construct website credentials JSON
+                websiteInfo = """{
+                        "aws_s3_bucket": "${json["aws_s3_bucket"]?.value ?: ''}"
+                }"""
             }
 
             // Write DB credentials to Ansible vars
@@ -84,11 +90,22 @@ pipeline {
                 echo "DB credentials saved to db.json"
             }
 
+                  // Write website cred to Ansible vars
+            dir("${ANSIBLE_DIR}/roles/static-website/vars") {
+                writeFile file: 'websiteInfo.json', text: websiteInfo
+                echo "website credentials saved to websiteInfo.json"
+            }
+
 
             // Generate Ansible inventory
             dir("${ANSIBLE_DIR}") {
                 def inventory = new StringBuilder()
-                
+
+                // Local machine as host
+                inventory.append("[local]\n")
+                inventory.append("localhost ansible_connection=local")
+
+
                 // Bastion host
                 inventory.append("[bastion]\n")
                 if (ec2PublicIps) {
@@ -148,6 +165,8 @@ pipeline {
                             # Run playbook for web servers
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_web.yml -v
                             ansible-playbook -i inventory/hosts.ini playbooks/configure_app.yml -v
+                            ansible-playbook -i inventory/hosts.ini playbooks/configure_static_website.yml -v
+
                           
                         """
                     }

@@ -22,8 +22,7 @@ instance_type = "t2.micro"
 
 db_name = "onet_gaming_app"
 
-s3_website_endpoint = "mydomain19871027.com.s3-website-eu-west-2.amazonaws.com" 
-s3_website_zone_id  = "Z3GKZC51ZF0DB4"   # eu-west-2 — you can override if needed
+
 domain_name = "onet-gaming.com"
 
 db_subnet_group_name   = "my-db-subnet-group"
