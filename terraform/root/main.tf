@@ -110,6 +110,15 @@ module "cm" {
   hosted_zone_id      = module.route53.hosted_zone_id
 }
 
+# Add record in Route 53 hosted zone
+module "s3-static-website" {
+  source = "../modules/cm"
+  alb_arn        = module.alb.alb_internet_facing_arn
+  tg_arn  = module.alb.tgt_arn
+  domain_name         = var.domain_name
+  hosted_zone_id      = module.route53.hosted_zone_id
+}
+
 
 
 
