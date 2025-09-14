@@ -1,5 +1,6 @@
-resource "aws_route53_zone" "main_zone" {
-  name = var.domain_name
+data "aws_route53_zone" "main_zone" {
+  name         = var.domain_name   # e.g. "mydomain19871027.com"
+  private_zone = false             # set to true if it's a private zone
 }
 
 resource "aws_route53_health_check" "alb_health_check" {
@@ -18,7 +19,7 @@ resource "aws_route53_health_check" "alb_health_check" {
 
 
 resource "aws_route53_record" "app_primary_record" {
-  zone_id = aws_route53_zone.main_zone.zone_id
+  zone_id = data.aws_route53_zone.main_zone.zone_id
   name    = ""
   type    = "A"
   set_identifier = "primary-alb-record"
@@ -38,7 +39,7 @@ resource "aws_route53_record" "app_primary_record" {
 
 
 resource "aws_route53_record" "app_secondary_record" {
-  zone_id = aws_route53_zone.main_zone.zone_id
+  zone_id = data.aws_route53_zone.main_zone.zone_id
   name    = ""
   type    = "A"
   set_identifier = "secondary-record"

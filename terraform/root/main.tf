@@ -98,7 +98,6 @@ module "route53" {
   s3_website_endpoint = var.s3_website_endpoint
   s3_website_zone_id = var.s3_website_zone_id
   domain_name = var.domain_name
-
 }
 
 

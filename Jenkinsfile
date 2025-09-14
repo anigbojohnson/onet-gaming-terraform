@@ -36,15 +36,14 @@ pipeline {
                 }
             }
         }
-
-stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
-    steps {
-        script {
-            def ec2PublicIps = []
-            def appPrivateIps = []
-            def dbVars
-            def internalAlbDns =""
-            def webVars = ""
+        stage('Get EC2 IPs, Update Ansible Inventory & DB Credentials') {
+            steps {
+                script {
+                    def ec2PublicIps = []
+                    def appPrivateIps = []
+                    def dbVars
+                    def internalAlbDns =""
+                    def webVars = ""
 
             // Fetch Terraform outputs
             dir("${TF_DIR}") {
