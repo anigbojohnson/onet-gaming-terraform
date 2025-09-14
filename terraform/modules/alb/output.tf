@@ -13,6 +13,11 @@ output "alb_internet_facing_dns" {
   value       = aws_lb.application_load_balancer.dns_name
 }
 
+output "alb_internet_facing_arn" {
+  description = "The dns name of internet facing load balancer"
+  value       = aws_lb.application_load_balancer.arn
+}
+
 output "alb_internal_dns" {
   description = "The dns name of internal of load balancer"
   value       = aws_lb.internal_alb.dns_name
