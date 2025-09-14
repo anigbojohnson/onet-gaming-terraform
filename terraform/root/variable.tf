@@ -83,6 +83,8 @@ variable "domain_name" {
   type        = string
 }
 
-
+variable website_content_dir{
+  
+}
 
 

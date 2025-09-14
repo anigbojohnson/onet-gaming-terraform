@@ -8,13 +8,9 @@ resource "aws_s3_bucket_website_configuration" "website" {
   bucket = data.aws_s3_bucket.existing.id
 
   index_document {
-  suffix = "website/index.html"
+  suffix = "${var.website_content_dir}/index.html"
   }
 
-
-  error_document {
-    key = "error.html"
-  }
 }
 
 # Public bucket policy to allow website access
@@ -29,7 +25,7 @@ resource "aws_s3_bucket_policy" "website_policy" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "arn:aws:s3:::${data.aws_s3_bucket.existing.id}/website/*"
+        Resource  = "arn:aws:s3:::${data.aws_s3_bucket.existing.id}/${var.website_content_dir}/*"
       }
     ]
   })

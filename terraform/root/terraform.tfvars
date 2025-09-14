@@ -27,5 +27,6 @@ domain_name = "onet-gaming.com"
 
 db_subnet_group_name   = "my-db-subnet-group"
 
+website_content_dir = "website"
 
 
