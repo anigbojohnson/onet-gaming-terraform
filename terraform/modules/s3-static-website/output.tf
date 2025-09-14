@@ -1,7 +1,3 @@
-# Get existing bucket
-data "aws_s3_bucket" "existing" {
-  bucket = var.domain_name
-}
 
 # Get website configuration
 data "aws_s3_bucket_website_configuration" "existing" {
