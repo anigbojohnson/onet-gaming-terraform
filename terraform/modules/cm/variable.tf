@@ -13,3 +13,4 @@ variable "hosted_zone_id" {
 
 variable "tg_arn" {
 }
+

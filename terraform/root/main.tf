@@ -101,6 +101,15 @@ module "route53" {
 }
 
 
+# Add record in Route 53 hosted zone
+module "cm" {
+  source = "../modules/cm"
+  alb_arn        = module.alb.alb_dns_name
+  tg_arn  = var.s3_website_zone_id
+  domain_name         = var.domain_name
+  hosted_zone_id      = module.route53.hosted_zone_id
+}
+
 
 
 
