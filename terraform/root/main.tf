@@ -105,7 +105,7 @@ module "route53" {
   alb_zone_id = module.alb.alb_zone_id
   s3_website_zone_id = module.s3-static-website.s3_website_zone_id
   domain_name = var.domain_name
-  s3_website_endpoint = module.route53.s3_website_endpoint
+  s3_website_endpoint = module.s3-static-website.s3_website_endpoint
 
 }
 
