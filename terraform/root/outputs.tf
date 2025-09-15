@@ -44,3 +44,7 @@ output "aws_s3_bucket" {
 output "website_content_dir" {
   value = var.website_content_dir
 }
+
+output "aws_region" {
+  value = var.region
+}

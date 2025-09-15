@@ -5,6 +5,7 @@
 tf_outputs: "{{ lookup('file', role_path + '/vars/websiteInfo.json') | from_json }}"
 aws_s3_bucket: "{{ tf_outputs.aws_s3_bucket }}"
 website_content_dir:  "{{ tf_outputs.website_content_dir }}"
+aws_region:  "{{ tf_outputs.aws_region }}"
 
 
 
