@@ -29,4 +29,6 @@ db_subnet_group_name   = "my-db-subnet-group"
 
 website_content_dir = "website"
 
+s3_website_zone_id = "Z3GKZC51ZF0DB4"
+
 

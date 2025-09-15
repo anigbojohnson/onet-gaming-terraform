@@ -103,7 +103,7 @@ module "route53" {
   source = "../modules/route53"
   alb_dns_name = module.alb.alb_dns_name
   alb_zone_id = module.alb.alb_zone_id
-  s3_website_zone_id = module.s3-static-website.s3_website_zone_id
+  s3_website_zone_id = var.s3_website_zone_id
   domain_name = var.domain_name
   s3_website_endpoint = module.s3-static-website.s3_website_endpoint
 

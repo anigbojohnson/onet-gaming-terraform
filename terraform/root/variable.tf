@@ -87,4 +87,7 @@ variable website_content_dir{
   
 }
 
+variable "s3_website_zone_id" {
+  
+}
 
