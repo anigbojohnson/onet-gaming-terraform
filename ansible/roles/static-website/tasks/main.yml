@@ -8,6 +8,6 @@
     mode: put
     acl: public-read
   with_fileglob:
-    - "{{ "website" }}/*"
+    - "{{ website_content_dir }}/*"
   loop_control:
     label: "{{ item | basename }}"

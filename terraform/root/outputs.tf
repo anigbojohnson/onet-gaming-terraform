@@ -41,3 +41,6 @@ output "aws_s3_bucket" {
   value = module.s3-static-website.bucket_arn
 }
 
+output "website_content_dir" {
+  value = var.website_content_dir
+}
