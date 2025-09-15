@@ -38,7 +38,7 @@ output "db_port" {
 }
 
 output "aws_s3_bucket" {
-  value = module.s3-static-website.bucket_arn
+  value = var.bucket_name
 }
 
 output "website_content_dir" {
