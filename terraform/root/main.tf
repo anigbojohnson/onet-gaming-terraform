@@ -97,7 +97,6 @@ module "s3-static-website" {
   website_content_dir = var.website_content_dir
 }
 
-
 # Add record in route 53 hosted zone
 module "route53" {
   source = "../modules/route53"
