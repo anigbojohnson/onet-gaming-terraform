@@ -38,6 +38,6 @@ output "db_port" {
 }
 
 output "aws_s3_bucket" {
-  value = module.s3-static-website.existing
+  value = module.s3-static-website.bucket_arn
 }
 
