@@ -106,7 +106,7 @@ pipeline {
 
                 // Local machine as host
                 inventory.append("[local]\n")
-                inventory.append("localhost ansible_connection=local ansible_python_interpreter=/home/codespace/.python/current/bin/python3\n\n")
+                inventory.append("localhost ansible_connection=local ansible_python_interpreter=/usr/local/python/3.12.1/bin/python3\n\n")
 
 
                 // Bastion host

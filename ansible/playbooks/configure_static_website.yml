@@ -1,5 +1,7 @@
 - name: Upload website files to S3 bucket
-  hosts: localhost
-  become: yes
+  hosts: local
+  connection: local
+  gather_facts: false
+  become: false
   roles:
     - static-website
