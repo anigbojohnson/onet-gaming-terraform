@@ -103,9 +103,12 @@ pipeline {
             dir("${ANSIBLE_DIR}") {
                 def inventory = new StringBuilder()
 
+
+                # In your inventory (hosts.ini)
+
                 // Local machine as host
                 inventory.append("[local]\n")
-                inventory.append("localhost ansible_connection=local\n\n")
+                inventory.append("localhost ansible_connection=local ansible_python_interpreter=/home/codespace/.python/current/bin/python3\n\n")
 
 
                 // Bastion host
@@ -190,5 +193,4 @@ pipeline {
         }
     }
 }
-
-
+                                                                                                                                                                                            
