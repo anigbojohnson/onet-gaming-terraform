@@ -93,7 +93,7 @@ module "alb" {
 # Add record in Route 53 hosted zone
 module "s3-static-website" {
   source = "../modules/s3-static-website"
-  domain_name  = var.domain_name
+  bucket_name  = var.bucket_name
   website_content_dir = var.website_content_dir
 }
 

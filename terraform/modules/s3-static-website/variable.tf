@@ -1,6 +1,6 @@
 #variable
-variable "domain_name" {
-  description = "Your domain name"
+variable "bucket_name" {
+  description = "Your bucket name"
   type        = string
 }
 

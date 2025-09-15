@@ -1,6 +1,6 @@
 # Reference the existing bucket
 data "aws_s3_bucket" "existing" {
-  bucket = var.domain_name
+  bucket = var.bucket_name
 }
 
 # Configure static website hosting

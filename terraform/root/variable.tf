@@ -91,3 +91,6 @@ variable "s3_website_zone_id" {
   
 }
 
+variable "bucket_name" {
+  
+}
