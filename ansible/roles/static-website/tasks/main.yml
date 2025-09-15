@@ -4,7 +4,6 @@
     object: "{{ website_content_dir }}/{{ item | basename }}"
     src: "{{ item }}"
     mode: put
-    permission: public-read      # ✅ replaces acl
     region: "{{ aws_region | default('eu-west-2') }}"
   loop: "{{ lookup('fileglob', role_path + '/files/*', wantlist=True) }}"
   loop_control:

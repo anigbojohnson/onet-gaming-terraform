@@ -13,15 +13,14 @@ resource "aws_s3_bucket_website_configuration" "website" {
 
 }
 
+# Block public ACLs, but allow bucket policy
 resource "aws_s3_bucket_public_access_block" "website" {
   bucket = data.aws_s3_bucket.existing.id
-
-  block_public_acls       = false
+  block_public_acls       = true
   block_public_policy     = false
-  ignore_public_acls      = false
+  ignore_public_acls      = true
   restrict_public_buckets = false
 }
-
 
 # Public bucket policy to allow website access
 resource "aws_s3_bucket_policy" "website_policy" {
