@@ -1,7 +1,5 @@
-#SPDX-License-Identifier: MIT-0
----
 - name: Deploy static website to S3
-  amazon.aws.s3:
+  amazon.aws.s3_object:
     bucket: "{{ s3_bucket_name }}"
     object: "{{ item | basename }}"
     src: "{{ item }}"
@@ -11,4 +9,3 @@
     - "{{ website_content_dir }}/*"
   loop_control:
     label: "{{ item | basename }}"
-
