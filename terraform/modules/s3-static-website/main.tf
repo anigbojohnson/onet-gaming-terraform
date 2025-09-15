@@ -8,7 +8,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
   bucket = data.aws_s3_bucket.existing.id
 
   index_document {
-  suffix = "${var.website_content_dir}/index.html"
+  suffix = "index.html"
   }
 
 }
