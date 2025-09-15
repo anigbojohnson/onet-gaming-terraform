@@ -81,7 +81,8 @@ pipeline {
                 // Construct website credentials JSON
                 websiteInfo = """{
                         "aws_s3_bucket": "${json["aws_s3_bucket"]?.value ?: ''}",
-                        "website_content_dir":"${json["website_content_dir"]?.value ?: ''}"
+                        "website_content_dir":"${json["website_content_dir"]?.value ?: ''}",
+                        "aws_region":"${json["aws_region"]?.value ?: ''}"
                 }"""
             }
 
