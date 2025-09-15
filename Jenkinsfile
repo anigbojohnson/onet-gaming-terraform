@@ -103,7 +103,7 @@ pipeline {
 
                 // Local machine as host
                 inventory.append("[local]\n")
-                inventory.append("localhost ansible_connection=local")
+                inventory.append("localhost ansible_connection=local\n\n")
 
 
                 // Bastion host
