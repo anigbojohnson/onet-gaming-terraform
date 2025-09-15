@@ -45,8 +45,8 @@ resource "aws_route53_record" "app_secondary_record" {
   set_identifier = "secondary-record"
 
   alias {
-    name    = "mydomain19871027.com.s3-website.eu-west-2.amazonaws.com"  # S3 Website Endpoint
-    zone_id = "Z3GKZC51ZF0DB4"  # Correct for eu-west-2
+    name    = var.s3_website_endpoint  # S3 Website Endpoint
+    zone_id = var.s3_website_zone_id  # Correct for eu-west-2
     evaluate_target_health = false
   }
 
