@@ -14,7 +14,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
-  bucket = aws_s3_bucket.existing.id
+  bucket = data.aws_s3_bucket.existing.id
 
   block_public_acls       = false
   block_public_policy     = false
