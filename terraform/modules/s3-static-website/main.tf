@@ -8,7 +8,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
   bucket = data.aws_s3_bucket.existing.id
 
   index_document {
-  suffix = "index.html"
+  suffix = "onet.html"
   }
 
 }

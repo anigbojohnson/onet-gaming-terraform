@@ -1,11 +1,12 @@
 - name: Deploy static website to S3
-  amazon.aws.s3_object:
+  amazon.aws.s3:
     bucket: "{{ s3_bucket_name }}"
-    object: "{{ item | basename }}"
+    object: "{{ website_content_dir }}/{{ item | basename }}"   # <- upload into 'website/' folder in S3
     src: "{{ item }}"
     mode: put
     acl: public-read
   with_fileglob:
-    - "{{ website_content_dir }}/*"
+    - "{{ role_path }}/files/*"
   loop_control:
     label: "{{ item | basename }}"
+
