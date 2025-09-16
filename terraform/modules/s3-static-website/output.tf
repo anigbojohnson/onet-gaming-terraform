@@ -4,6 +4,5 @@ output "s3_website_endpoint" {
 }
 
 output "bucket_arn" {
-  value = data.aws_s3_bucket.existing.arn
+  value = aws_s3_bucket.website.arn
 }
-
