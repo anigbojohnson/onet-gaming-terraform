@@ -32,7 +32,7 @@ resource "aws_s3_bucket_policy" "website_policy" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "arn:aws:s3:::${aws_s3_bucket.existing.id}/*"
+        Resource  = "arn:aws:s3:::${aws_s3_bucket.create-bucket.id}/*"
       }
     ]
   })

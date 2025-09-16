@@ -1,7 +1,7 @@
 - name: Deploy static website to S3
   amazon.aws.s3_object:
     bucket: "{{ aws_s3_bucket }}"
-    object: "{{ website_content_dir }}/{{ item | basename }}"
+    object: "{{ item | basename }}"
     src: "{{ item }}"
     mode: put
     region: "{{ aws_region | default('eu-west-2') }}"
