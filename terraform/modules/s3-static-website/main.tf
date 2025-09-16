@@ -1,21 +1,20 @@
-resource "aws_s3_bucket" "existing" {
+resource "aws_s3_bucket" "create-bucket" {
   bucket = var.bucket_name
 }
 
+
 resource "aws_s3_bucket_website_configuration" "website" {
-  bucket = aws_s3_bucket.existing.id
+  bucket = aws_s3_bucket.create-bucket.id
 
   index_document {
     suffix = "onet.html"
   }
 
-  error_document {
-    key = "error.html"
-  }
+
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
-  bucket = aws_s3_bucket.existing.id
+  bucket = aws_s3_bucket.create-bucket.id
   block_public_acls       = true
   block_public_policy     = false
   ignore_public_acls      = true
@@ -23,7 +22,7 @@ resource "aws_s3_bucket_public_access_block" "website" {
 }
 
 resource "aws_s3_bucket_policy" "website_policy" {
-  bucket = aws_s3_bucket.existing.id
+  bucket = aws_s3_bucket.create-bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
