@@ -25,7 +25,7 @@ db_name = "onet_gaming_app"
 
 domain_name = "onet-gaming.com"
 
-bucket_name = "onet-gaming-1987"
+bucket_name = "onet-gaming-website-1987"
 
 db_subnet_group_name   = "my-db-subnet-group"
 
