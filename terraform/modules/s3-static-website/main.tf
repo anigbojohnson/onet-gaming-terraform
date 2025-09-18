@@ -21,6 +21,7 @@ resource "aws_s3_bucket_public_access_block" "website" {
   restrict_public_buckets = false
 }
 
+
 resource "aws_s3_bucket_policy" "website_policy" {
   bucket = aws_s3_bucket.create-bucket.id
 
