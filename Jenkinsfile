@@ -17,7 +17,6 @@ pipeline {
                 dir("${TF_DIR}") {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'onet-gaming-aws-credential']]) {
                         sh """
-                        
                         # Initialize Terraform backend
                         terraform init -reconfigure
 
