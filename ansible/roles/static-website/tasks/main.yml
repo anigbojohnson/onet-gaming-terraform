@@ -1,13 +1,15 @@
-- name: Deploy static website to S3
+- name: Deploy static website to S3 (include folders)
   amazon.aws.s3_object:
     bucket: "{{ aws_s3_bucket }}"
-    object: "{{ item | basename }}"
-    src: "{{ item }}"
+    object: "{{ item.path | regex_replace('^' + role_path + '/files/', '') }}"
+    src: "{{ item.path }}"
     mode: put
     region: "{{ aws_region | default('eu-west-2') }}"
-  loop: "{{ lookup('fileglob', role_path + '/files/*', wantlist=True) }}"
+  loop: "{{ lookup('ansible.builtin.filetree', role_path + '/files', wantlist=True) }}"
+  when: item.state == 'file'
   loop_control:
-    label: "{{ item | basename }}"
+    label: "{{ item.path | regex_replace('^' + role_path + '/files/', '') }}"
+
 
 
 
